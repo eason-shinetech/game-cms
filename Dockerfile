@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:23-alpine AS deps
+FROM node:slim AS deps
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN npm install
 
 
 # Rebuild the source code only when needed
-FROM node:23-alpine AS builder
+FROM node:slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 
@@ -29,7 +29,7 @@ RUN npm run build
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 # Production image, copy all the files and run next
-FROM node:23-alpine AS runner
+FROM node:slim AS runner
 WORKDIR /app
 
 # Uncomment the following line in case you want to disable telemetry during runtime.
