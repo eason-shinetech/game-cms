@@ -40,6 +40,7 @@ const GameItem = ({ _id, title, thumb }: GameItemProps) => {
         width={400}
         height={400}
         priority={true} //预加载
+        loading="eager"
       />
       {hoverId === _id && (
         <div className="absolute bottom-0 left-0 text-xs p-1 text-slate-100 bg-gray-400">

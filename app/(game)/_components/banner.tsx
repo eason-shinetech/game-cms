@@ -37,7 +37,7 @@ const GameBanner = () => {
     router.push(`/${id}`);
   };
   return (
-    <div className="w-full grid grid-rows-1 grid-cols-4 gap-4 mt-4">
+    <div className="w-full grid grid-rows-1 grid-cols-4 gap-4 mt-4 cursor-pointer">
       {banners.map((banner, index) => (
         <AspectRatio
           key={index}

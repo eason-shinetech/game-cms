@@ -7,42 +7,14 @@ import GameModel from "@/models/game";
 import { convertToMongoId } from "@/lib/utils";
 import { Suspense } from "react";
 
-const GamePage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{ categoryId: string; title: string }>;
-}) => {
-  const { categoryId, title } = await searchParams;
-  await dbConnect();
-  const conds: any[] = [{ status: "published" }];
-  if (categoryId) {
-    conds.push({ categoryIds: convertToMongoId(categoryId) });
-  }
-  if (title) {
-    conds.push({
-      title: {
-        $regex: title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-        $options: "i",
-      },
-    });
-  }
-  const data = await GameModel.find(
-    conds.length > 0 ? { $and: conds } : {},
-    { title: 1, thumb: 1 },
-    { limit: 24, sort: { clickCount: -1, updatedAt: -1, title: 1 } }
-  );
-  const games = data.map((item) => ({
-    _id: item._id.toString(),
-    title: item.title,
-    thumb: item.thumb,
-  }));
+const GamePage = async () => {
   return (
     <div className="flex flex-col gap-4">
       <GameBanner />
       {/* <AdBanner /> */}
       <GameCategory />
       <Suspense>
-        <GameList initGames={games} />
+        <GameList />
       </Suspense>
     </div>
   );

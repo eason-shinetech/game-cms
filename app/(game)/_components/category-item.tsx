@@ -36,7 +36,7 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
       onClick={() => queryForCategory(_id)}
       variant={`outline`}
       className={cn(
-        "text-xs text-sky-700 hover:text-sky-700 rounded-2xl",
+        "text-xs text-sky-700 hover:text-sky-700 rounded-2xl cursor-pointer",
         categoryId === _id &&
           "bg-sky-500 text-white hover:bg-sky-700 hover:text-white"
       )}

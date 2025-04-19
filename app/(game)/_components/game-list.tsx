@@ -6,16 +6,12 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import GameLoadMore from "./game-load-more";
 
-interface GameListProps {
-  initGames: { _id: string; title: string; thumb: string }[];
-}
-
-const GameList = ({ initGames }: GameListProps) => {
-  const [page, setPage] = useState(2);
+const GameList = () => {
+  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(24);
   const [games, setGames] = useState<
     { _id: string; title: string; thumb: string }[]
-  >([...initGames]);
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
 
@@ -45,6 +41,7 @@ const GameList = ({ initGames }: GameListProps) => {
       setIsLoading(false);
     }
   };
+
 
   useEffect(() => {
     getGames();

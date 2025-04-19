@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
     const aggr: any[] = [
       { $match: { $and: conds } },
-      { $project: { title: 1, thumb: 1 } },
+      { $project: { title: 1, thumb: 1, clickCount: 1 } },
       {
         $facet: {
           total: [{ $count: "total" }],
