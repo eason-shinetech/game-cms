@@ -15,11 +15,9 @@ COPY --from=deps /app/node_modules ./node_modules
 
 COPY ./ ./
 
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+ENV NODE_ENV=production
 
-RUN rm -rf .env && cp .env.${NODE_ENV} ./.env 
-RUN echo "NODE_ENV is set to: ${NODE_ENV}, copy env file .env.${NODE_ENV}"
+RUN rm -rf .env && cp .env.production ./.env 
 
 RUN npm run build
 
