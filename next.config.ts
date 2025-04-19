@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [{ hostname: "**.gamemonetize.com", protocol: "https" },{ hostname: "**.gamedistribution.com", protocol: "https" }],
   },
+  output: 'standalone',
 };
 
 export default nextConfig;
