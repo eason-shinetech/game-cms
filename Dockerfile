@@ -19,7 +19,7 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 RUN echo "NODE_ENV is set to: ${NODE_ENV}"
 
-RUN rm -rf .env && cp gke/.env.${NODE_ENV} ./.env 
+RUN rm -rf .env && cp .env.${NODE_ENV} ./.env 
 
 RUN npm run build
 
