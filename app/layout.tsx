@@ -40,8 +40,12 @@ export const metadata: Metadata = {
     "html5",
     "mobile",
   ],
-  icons: {
-    icon: "/favicon.ico",
+  metadataBase: new URL("https://freegame.funnyplayers.com"),
+  alternates: {
+    canonical: "/"
+  },
+  other: {
+    "google-adsense-account": "ca-pub-9748776301585000",
   },
 };
 
