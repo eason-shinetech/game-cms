@@ -5,6 +5,7 @@ import GameCategory from "./_components/category";
 import GameList from "./_components/game-list";
 import GameModel from "@/models/game";
 import { convertToMongoId } from "@/lib/utils";
+import { Suspense } from "react";
 
 const GamePage = async ({
   searchParams,
@@ -40,7 +41,9 @@ const GamePage = async ({
       <GameBanner />
       {/* <AdBanner /> */}
       <GameCategory />
-      <GameList initGames={games} />
+      <Suspense>
+        <GameList initGames={games} />
+      </Suspense>
     </div>
   );
 };

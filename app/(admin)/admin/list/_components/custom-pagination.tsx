@@ -53,7 +53,7 @@ const CustomPagination = ({
           [-2, -1, 0, 1, 2].map((i, index) => {
             const step =
               currentPage === 1 ? i + 1 : currentPage === totalPage ? i - 1 : i;
-            let page = currentPage + step;
+            const page = currentPage + step;
 
             if (page < 1 || page > totalPage) return null;
 

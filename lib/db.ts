@@ -17,7 +17,7 @@ interface GlobalWithMongoose {
 const globalWithMongoose = global as unknown as GlobalWithMongoose;
 
 // 确保在热更新时保留连接缓存
-let cached = globalWithMongoose.mongoose || { conn: null, promise: null };
+const cached = globalWithMongoose.mongoose || { conn: null, promise: null };
 
 async function dbConnect(): Promise<typeof mongoose> {
   if (cached.conn) return cached.conn;

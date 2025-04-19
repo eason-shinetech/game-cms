@@ -37,7 +37,7 @@ const UploadFile = ({ setData }: { setData: (data: any) => void }) => {
       reader.readAsText(file);
     });
     setFiles(newFiles);
-  }, []);
+  }, [setData]);
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: { "application/json": [".json"] },

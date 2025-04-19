@@ -54,7 +54,7 @@ const GameImport = () => {
       setItems([]);
       return;
     }
-    getPageData(currentPage);
+    getPageData(1);
   }, [data]);
 
   const importData = async () => {

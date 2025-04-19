@@ -16,7 +16,7 @@ export const SearchInput = ({
 
   useEffect(() => {
     setKeyword(debouncedValue);
-  }, [debouncedValue]);
+  }, [debouncedValue, setKeyword]);
 
   return (
     <div className="relative">

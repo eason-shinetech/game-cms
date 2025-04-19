@@ -4,7 +4,7 @@ import Logo from "@/components/commons/logo";
 import { SearchInput } from "./search-input";
 import { TimerIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense } from "react";
 
 const GameNavbar = () => {
   return (
@@ -13,7 +13,9 @@ const GameNavbar = () => {
         <Logo />
       </div>
       <div className="hidden md:block ml-auto">
-        <SearchInput />
+        <Suspense>
+          <SearchInput />
+        </Suspense>
       </div>
       <div>
         <Link href="/" title="History">

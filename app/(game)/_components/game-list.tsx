@@ -4,7 +4,6 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import GameItem from "./game-item";
 import GameLoadMore from "./game-load-more";
 
 interface GameListProps {
@@ -71,7 +70,7 @@ const GameList = ({ initGames }: GameListProps) => {
           onLoadMore={onLoadMore}
         />
       </div>
-      {games.length === 0 && (
+      {games.length === 0 && !isLoading && (
         <div className="w-full h-[100px] flex items-center justify-center text-center text-slate-400 text-sm shadow-sm">
           No Games Found
         </div>
