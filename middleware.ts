@@ -6,8 +6,7 @@ const { auth } = NextAuth(authConfig);
 export default auth((req) => {
   const { nextUrl } = req;
   // req.auth is provided by Auth.js
-  console.log("req.auth.user: ", req.auth?.user, nextUrl);
-  console.log("req.auth.user: ", nextUrl.pathname, nextUrl);
+  console.log("req.auth.user: ", req.auth?.user, process.env.NEXTAUTH_URL);
   // set isAuthenticated to true if req.auth is a truthy value. otherwise set to false.
   const isAuthenticated = !!req.auth;
 
