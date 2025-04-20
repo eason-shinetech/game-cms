@@ -13,19 +13,13 @@ const GameList = () => {
     { _id: string; title: string; thumb: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
 
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId") || "";
   const title = searchParams.get("title") || "";
-
-  const initialized = useRef(false)
-  
   const getGames = async () => {
     try {
-      if (isLoading) {
-        return;
-      }
       setIsLoading(true);
       let url = `/api/game/search?page=${page}&pageSize=${pageSize}`;
       if (categoryId) {
@@ -38,7 +32,7 @@ const GameList = () => {
       const total = res.data.total;
       const data = res.data.data;
       setGames(games.concat(data));
-      setHasMore(total > games.length);
+      setHasMore(total > page * pageSize);
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong");
@@ -52,12 +46,8 @@ const GameList = () => {
   }, [page]);
 
   useEffect(() => {
-    if (!categoryId && !title) {
-      return;
-    }
     setGames([]);
     setPage(1);
-    getGames();
   }, [categoryId, title]);
 
   const onLoadMore = (page: number) => {

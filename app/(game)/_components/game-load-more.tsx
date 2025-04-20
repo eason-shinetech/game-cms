@@ -20,22 +20,37 @@ const GameLoadMore = ({
   onLoadMore,
 }: GameLoadMoreProps) => {
   const observerRef = useRef<HTMLDivElement>(null);
-
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && hasMore && !isLoading) {
-          onLoadMore(currentPage + 1);
+          // 先清除可能存在的旧定时器
+          if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            timerRef.current = null;
+          }
+
+          timerRef.current = setTimeout(() => {
+            // 添加二次状态检查
+            if (hasMore && !isLoading) {
+              onLoadMore(currentPage + 1);
+            }
+            timerRef.current = null;
+          }, 500);
         }
       },
-      { threshold: 1.0 }
+      { threshold: 0.8 }
     );
 
     if (observerRef.current) {
       observer.observe(observerRef.current);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, [currentPage, hasMore, isLoading, onLoadMore]);
 
   return (
@@ -47,7 +62,7 @@ const GameLoadMore = ({
       {/* 滚动触发元素 */}
       <div
         ref={observerRef}
-        className="col-span-full h-12 flex items-center justify-center gap-2"
+        className="col-span-full h-[60px] flex items-center justify-center gap-2"
       >
         {isLoading ? (
           <>
