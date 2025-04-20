@@ -44,6 +44,6 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // 排除 Cloudflare 相关路径
-    "/((?!_next|cgi-bin|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico)).*)",
+    "/((?!_next|cgi-bin|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|txt)).*)",
   ],
 };
