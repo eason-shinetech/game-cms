@@ -1,18 +1,24 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
   
-  // 添加对 Cloudflare 特殊路径的放行
+  console.log('Request URL:', nextUrl);
+  // 加强路径匹配规则
   if (nextUrl.pathname.startsWith('/cdn-cgi')) {
-    return NextResponse.next();
+    // 创建空响应避免 404
+    return new Response(null, { 
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'CF-RAY': 'mock_bypass'
+      }
+    });
   }
-
-  console.log('Request URL:', req.url);
   
   const response = NextResponse.next();
 
