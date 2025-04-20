@@ -8,7 +8,12 @@ const nextConfig: NextConfig = {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
   },
   images: {
-    remotePatterns: [{ hostname: "**.gamemonetize.com", protocol: "https" },{ hostname: "**.gamedistribution.com", protocol: "https" }],
+    remotePatterns: [
+      { hostname: "**.gamemonetize.com", protocol: "https" },
+      { hostname: "**.gamedistribution.com", protocol: "https" },
+      // 新增以下域名配置
+      { hostname: "**.funnyplayers.com", protocol: "https" }
+    ],
   },
   output: 'standalone',
 };
