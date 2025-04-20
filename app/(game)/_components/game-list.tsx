@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import GameLoadMore from "./game-load-more";
 
 const GameList = () => {
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const pageSize = 24;
   const [games, setGames] = useState<
     { _id: string; title: string; thumb: string }[]
@@ -18,7 +18,7 @@ const GameList = () => {
   const searchParams = useSearchParams();
   const categoryId = searchParams.get("categoryId") || "";
   const title = searchParams.get("title") || "";
-  const getGames = async () => {
+  const getGamesByPageChange = async (page: number) => {
     try {
       setIsLoading(true);
       let url = `/api/game/search?page=${page}&pageSize=${pageSize}`;
@@ -41,17 +41,15 @@ const GameList = () => {
     }
   };
 
-  useEffect(() => {
-    getGames();
-  }, [page]);
 
   useEffect(() => {
     setGames([]);
-    setPage(1);
+    setPage(0);
   }, [categoryId, title]);
 
   const onLoadMore = (page: number) => {
     setPage(page);
+    getGamesByPageChange(page);
   };
 
   return (
@@ -65,7 +63,7 @@ const GameList = () => {
           onLoadMore={onLoadMore}
         />
       </div>
-      {games.length === 0 && !isLoading && (
+      {games.length === 0 && !isLoading && !hasMore && (
         <div className="w-full h-[100px] flex items-center justify-center text-center text-slate-400 text-sm shadow-sm">
           No Games Found
         </div>
