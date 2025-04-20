@@ -6,10 +6,14 @@ const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
+  
+  // 添加对 Cloudflare 特殊路径的放行
+  if (nextUrl.pathname.startsWith('/cdn-cgi')) {
+    return NextResponse.next();
+  }
 
   console.log('Request URL:', req.url);
   
-  // 移除对 /cdn-cgi 路径的拦截
   const response = NextResponse.next();
 
   // req.auth is provided by Auth.js
@@ -29,6 +33,7 @@ export default auth((req) => {
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|txt)).*)",
+    // 允许所有路由通过中间件，但排除静态资源
+    "/((?!_next/static|_next/image|favicon.ico).*)",
   ],
 };
