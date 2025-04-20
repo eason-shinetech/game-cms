@@ -49,7 +49,8 @@ const GameBanner = () => {
             key={`image-${index}`}
             src={banner.thumb}
             alt={banner._id}
-            fill
+            width={640}
+            height={275}
             className="h-full w-full rounded-md object-contain shadow-sm"
           />
         </AspectRatio>

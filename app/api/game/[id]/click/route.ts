@@ -8,6 +8,7 @@ export async function POST(
 ) {
   try {
     const { id } = await params;
+    console.log("Game Click:", id);
     await dbConnect();
     const game = await GameModel.findById(id);
     if (!game) {

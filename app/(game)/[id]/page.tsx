@@ -1,10 +1,11 @@
 "use client";
 
 import { Game } from "@/models/game";
+import { useGameVistorStore } from "@/store/game-visitor-store";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const GameDetail = () => {
@@ -13,9 +14,31 @@ const GameDetail = () => {
   const [game, setGame] = useState<Game | null>(null);
   const [isFrameLoaded, setIsFrameLoaded] = useState(false);
   const router = useRouter();
+
+  const visitor = useGameVistorStore((state: any) => state.visitor);
+
   useEffect(() => {
     getGame();
   }, []);
+
+  const addHistory = async () => {
+    console.log("addHistory", visitor);
+    if (!visitor) return;
+    try {
+      const res = await axios.post(`/api/game/${id}/history`, {
+        userId: visitor,
+      });
+      const data = await res.data;
+      console.log(data);
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
+  };
+
+  useEffect(() => {
+    addHistory();
+  }, [visitor]);
 
   const getGame = async () => {
     try {

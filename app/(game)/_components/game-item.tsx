@@ -18,7 +18,7 @@ const GameItem = ({ _id, title, thumb }: GameItemProps) => {
 
   const onClick = async (id: string) => {
     try {
-      await axios.post(`/api/game/click/${id}`);
+      axios.post(`/api/game/${id}/click`);
       router.push(`/${id}`);
     } catch (err) {
       console.log(err);
@@ -27,7 +27,7 @@ const GameItem = ({ _id, title, thumb }: GameItemProps) => {
   };
   return (
     <div
-      className="relative w-full h-full flex items-center justify-center cursor-pointer shadow-sm"
+      className="relative flex items-center justify-center cursor-pointer shadow-sm"
       onMouseEnter={() => setHoverId(_id)}
       onTouchStart={() => setHoverId(_id)}
       onMouseLeave={() => setHoverId(null)}
@@ -37,10 +37,10 @@ const GameItem = ({ _id, title, thumb }: GameItemProps) => {
       <Image
         src={thumb}
         alt={title}
-        width={400}
-        height={400}
+        width={512}
+        height={512}
         priority={true} //预加载
-        loading="eager"
+        // loading="eager"
       />
       {hoverId === _id && (
         <div className="absolute bottom-0 left-0 text-xs p-1 text-slate-100 bg-gray-400">

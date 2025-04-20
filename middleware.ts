@@ -22,8 +22,6 @@ export default auth((req) => {
   
   const response = NextResponse.next();
 
-  // req.auth is provided by Auth.js
-  console.log("req.auth.user: ", req.auth?.user, process.env.NEXTAUTH_URL);
   // set isAuthenticated to true if req.auth is a truthy value. otherwise set to false.
   const isAuthenticated = !!req.auth;
 

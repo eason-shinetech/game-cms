@@ -2,13 +2,13 @@
 
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import GameLoadMore from "./game-load-more";
 
 const GameList = () => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(24);
+  const pageSize = 24;
   const [games, setGames] = useState<
     { _id: string; title: string; thumb: string }[]
   >([]);
@@ -16,11 +16,16 @@ const GameList = () => {
   const [hasMore, setHasMore] = useState(false);
 
   const searchParams = useSearchParams();
-  const categoryId = searchParams.get("categoryId");
-  const title = searchParams.get("title");
+  const categoryId = searchParams.get("categoryId") || "";
+  const title = searchParams.get("title") || "";
 
+  const initialized = useRef(false)
+  
   const getGames = async () => {
     try {
+      if (isLoading) {
+        return;
+      }
       setIsLoading(true);
       let url = `/api/game/search?page=${page}&pageSize=${pageSize}`;
       if (categoryId) {
@@ -42,14 +47,17 @@ const GameList = () => {
     }
   };
 
-
   useEffect(() => {
     getGames();
-  }, [page, pageSize]);
+  }, [page]);
 
   useEffect(() => {
+    if (!categoryId && !title) {
+      return;
+    }
     setGames([]);
     setPage(1);
+    getGames();
   }, [categoryId, title]);
 
   const onLoadMore = (page: number) => {

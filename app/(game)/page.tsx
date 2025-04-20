@@ -4,7 +4,7 @@ import GameCategory from "./_components/category";
 import GameList from "./_components/game-list";
 import { Suspense } from "react";
 
-const GamePage = async () => {
+const GamePage = () => {
   return (
     <div className="flex flex-col gap-4">
       <GameBanner />

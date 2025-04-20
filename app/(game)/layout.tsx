@@ -1,5 +1,6 @@
 import ToasterProvider from "@/components/providers/toaster-provider";
 import GameHeader from "./_components/header";
+import VisitorPage from "./_components/visitor";
 
 export default function GameLayout({
   children,
@@ -8,6 +9,7 @@ export default function GameLayout({
 }) {
   return (
     <div>
+      <VisitorPage />
       <div className="h-[60px] fixed inset-y-0 w-full z-50">
         <GameHeader />
       </div>
