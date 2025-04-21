@@ -54,7 +54,7 @@ const GameLoadMore = ({
   }, [currentPage, hasMore, isLoading, onLoadMore]);
 
   return (
-    <div className="grid gird-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
+    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
       {data.map((item, index) => (
         <GameItem key={index} {...item} />
       ))}

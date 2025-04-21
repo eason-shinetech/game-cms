@@ -2,7 +2,7 @@ import ToasterProvider from "@/components/providers/toaster-provider";
 import GameHeader from "./_components/header";
 import VisitorPage from "./_components/visitor";
 
-export default function GameLayout({
+export default async function GameLayout({
   children,
 }: {
   children: React.ReactNode;

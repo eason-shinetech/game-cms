@@ -5,7 +5,7 @@ import { useGameVistorStore } from "@/store/game-visitor-store";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 const GameDetail = () => {
@@ -46,7 +46,6 @@ const GameDetail = () => {
       const data = await res.data;
       let newUrl = data.url;
       if (data.url.includes("gamedistribution.com")) {
-        //&width=510&height=900&gd_sdk_referrer_url=https://www.example.com/games/game-path
         newUrl = `https://embed.gamedistribution.com/?url=${data.url}&width=${data.width}&height=${data.height}&language=es&gdpr-tracking=1&gdpr-targeting=1&gdpr-third-party=0&gd_sdk_referrer_url=${process.env.NEXTAUTH_URL}/${id}`;
       }
       console.log("newUrl", process.env.NEXTAUTH_URL, newUrl);

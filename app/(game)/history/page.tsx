@@ -65,7 +65,7 @@ const HistoryPage = () => {
                 Today
               </span>
               <hr className="border border-slate-300 my-2" />
-              <div className="grid gird-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
                 {todayHistories.map((history) => (
                   <GameItem
                     key={history.gameId}
@@ -83,7 +83,7 @@ const HistoryPage = () => {
                 Yesterday
               </span>
               <hr className="border border-slate-300 my-2" />
-              <div className="grid gird-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
                 {yesterdayHistories.map((history) => (
                   <GameItem
                     key={history.gameId}
@@ -101,7 +101,7 @@ const HistoryPage = () => {
                 History
               </span>
               <hr className="border border-slate-300 my-2" />
-              <div className="grid gird-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
                 {oldHistories.map((history) => (
                   <GameItem
                     key={history.gameId}

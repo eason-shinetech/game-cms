@@ -3,7 +3,8 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-//每日推荐：4个
+//每日推荐：4个.
+//TODO: 通过管理端配置
 const getBanners = () => {
   return [
     {
@@ -37,7 +38,7 @@ const GameBanner = () => {
     router.push(`/${id}`);
   };
   return (
-    <div className="w-full grid grid-rows-1 grid-cols-4 gap-4 mt-4 cursor-pointer">
+    <div className="hidden w-full md:grid grid-rows-1 grid-cols-4 gap-4 mt-4 cursor-pointer">
       {banners.map((banner, index) => (
         <AspectRatio
           key={index}

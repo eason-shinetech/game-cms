@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import dbConnect from "@/lib/db";
 import GameCategoryModel from "@/models/game-category";
 import CategoryItem from "./category-item";
