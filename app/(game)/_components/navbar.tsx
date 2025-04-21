@@ -14,7 +14,13 @@ const GameNavbar = () => {
   return (
     <div className="w-full flex justify-between items-center gap-2">
       <div className="block md:hidden">
-        <MobileSidebar />
+        {isHomePage ? (
+          <MobileSidebar />
+        ) : (
+          <Link href="/" className="mr-auto" title="Home">
+            <Home />
+          </Link>
+        )}
       </div>
       <div>
         <Logo />
@@ -26,7 +32,7 @@ const GameNavbar = () => {
           </Suspense>
         </div>
       ) : (
-        <Link href="/" className="ml-auto" title="Home">
+        <Link href="/" className="hidden md:block ml-auto" title="Home">
           <Home />
         </Link>
       )}
