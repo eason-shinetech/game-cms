@@ -10,7 +10,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, EyeIcon, FlagIcon, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
 
@@ -24,10 +24,25 @@ export type GameList = {
   tags: string[];
   from: string;
   status: "draft" | "published";
+  bannerImage?: string;
+  isSetBanner: boolean;
 };
 
 // 修改 columns 定义，接收 onRefresh 参数
 export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
+  {
+    accessorKey: "isSetBanner",
+    header: () => "Banner",
+    size: 50,
+    cell: ({ row }) => {
+      const isSetBanner = Boolean(row.getValue("isSetBanner"));
+      return (
+        <div className="w-[50px] flex items-center justify-center">
+          {isSetBanner && <FlagIcon className="w-4 h-4" />}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "thumb",
     header: () => "Thumb",
@@ -156,6 +171,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
     size: 80,
     cell: ({ row }) => {
       const status = row.getValue("status") as "draft" | "published";
+      const isSetBanner = Boolean(row.getValue("isSetBanner"));
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -172,6 +188,20 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
             >
               {status === "draft" ? `Publish` : `Unpublish`}
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setBanner(row.original).then(onRefresh);
+              }}
+            >
+              {isSetBanner ? `Remove Banner` : `Set Banner`}
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                addClick(row.original).then(onRefresh);
+              }}
+            >
+              Add Click
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -187,6 +217,34 @@ const publish = async (game: GameList) => {
         res.data.status === "published" ? "published" : "unpublished"
       } successfully!`
     );
+  } catch (err) {
+    console.log(err);
+    toast.error("Something went wrong");
+  }
+};
+
+const setBanner = async (game: GameList) => {
+  try {
+    if (!game.bannerImage) {
+      toast.error("This game has no banner image");
+      return;
+    }
+    if (game.isSetBanner) {
+      await axios.delete(`/api/game/list/${game._id}/banner`);
+    } else {
+      await axios.post(`/api/game/list/${game._id}/banner`);
+    }
+
+    toast.success(`Game “${game.title}” set banner successfully!`);
+    
+  } catch (err) {
+    console.log(err);
+    toast.error("Something went wrong");
+  }
+};
+
+const addClick = async (game: GameList) => {
+  try {
   } catch (err) {
     console.log(err);
     toast.error("Something went wrong");

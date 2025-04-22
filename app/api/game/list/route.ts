@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/db";
 import { convertToMongoId } from "@/lib/utils";
 import GameModel from "@/models/game";
+import GameConfigModel from "@/models/game-config";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -13,6 +14,9 @@ export async function GET(req: NextRequest) {
     const order = searchParams.get("order") === "asc" ? 1 : -1;
     const status = searchParams.get("status");
     const categoryId = searchParams.get("categoryId");
+    const isOnlyBanner = searchParams.get("isOnlyBanner");
+    //searchSelectedBanner
+    const searchSelectedBanner = searchParams.get("searchSelectedBanner");
     await dbConnect();
     const skip = (page - 1) * pageSize;
     const dbquery = {
@@ -22,6 +26,14 @@ export async function GET(req: NextRequest) {
       ],
     };
     const conds: any[] = [];
+
+    if (searchSelectedBanner) {
+      const config = await GameConfigModel.findOne();
+      if (config) {
+        const bannerIds = config.banners.map((banner: { id: any; }) => banner.id);
+        conds.push({ _id: { $in: bannerIds } });
+      }
+    }
     if (status) {
       conds.push({ status: status });
     }
@@ -30,6 +42,9 @@ export async function GET(req: NextRequest) {
     }
     if (keyword) {
       conds.push(dbquery);
+    }
+    if (isOnlyBanner) {
+      conds.push({ bannerImage: { $ne: null } });
     }
     const aggr: any[] = [];
     if (conds.length > 0) {
@@ -64,7 +79,6 @@ export async function GET(req: NextRequest) {
       },
     });
     // 聚合查询
-    console.log("[Get Game List Query]:", JSON.stringify(aggr))
     const result = await GameModel.aggregate(aggr);
     let total = 0;
     let data = [];

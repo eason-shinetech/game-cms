@@ -18,6 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { GameConfig } from "@/models/game-config";
 
 const ListPage = () => {
   const [data, setData] = React.useState<GameList[]>([]);
@@ -33,6 +35,8 @@ const ListPage = () => {
       name: string;
     }[]
   >([]);
+  const [gameConfig, setGameConfig] = React.useState<GameConfig | null>(null);
+
   const [keyword, setKeyword] = React.useState("");
   const [sort, setSort] = React.useState<ColumnSort | null>(null);
   const [page, setPage] = React.useState(1);
@@ -47,6 +51,7 @@ const ListPage = () => {
 
   const [status, setStatus] = React.useState("");
   const [categoryId, setCategoryId] = React.useState("");
+  const [searchBanner, setSearchBanner] = React.useState("");
 
   const [refreshKey, setRefreshKey] = useState(0);
   const columns = useMemo(
@@ -74,6 +79,16 @@ const ListPage = () => {
     }
   };
 
+  const getGameConfig = async () => {
+    try {
+      const res = await axios.get("/api/game/config");
+      setGameConfig(res.data);
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    }
+  };
+
   const getGameData = async () => {
     try {
       setIsLoading(true);
@@ -89,6 +104,12 @@ const ListPage = () => {
         // 添加条件判断
         url += `&categoryId=${categoryId}`;
       }
+      if (searchBanner === "banner") {
+        // 添加条件判断
+        url += `&isOnlyBanner=true`;
+      } else if (searchBanner === "selected") {
+        url += `&searchSelectedBanner=true`;
+      }
       const res = await axios.get(url);
       const total = res.data.total;
       setTotal(total);
@@ -102,6 +123,9 @@ const ListPage = () => {
         tags:
           tags.filter((t) => game.tagIds.includes(t._id))?.map((c) => c.name) ||
           [],
+        isSetBanner: gameConfig?.banners?.length
+          ? gameConfig.banners.some((b) => b.id === game._id)
+          : false,
       }));
       setData(data);
     } catch (err) {
@@ -113,11 +137,16 @@ const ListPage = () => {
   };
 
   useEffect(() => {
-    getGameData();
+    setPage(1);
+    setIsMounted(false);
+    getGameConfig().then(() => {
+      setIsMounted(true);
+      getGameData();
+    });
   }, [refreshKey]);
 
   useEffect(() => {
-    Promise.all([getCategories(), getTags()]).then(() => {
+    Promise.all([getCategories(), getTags(), getGameConfig()]).then(() => {
       setIsMounted(true);
     });
   }, []);
@@ -147,7 +176,11 @@ const ListPage = () => {
   useEffect(() => {
     if (!isMounted) return;
     getGameData();
-  }, [keyword, sort, page, pageSize, isMounted, status, categoryId]);
+  }, [isMounted, page, pageSize]);
+
+  const search = async () => {
+    getGameData();
+  };
 
   useEffect(() => {
     setPage(1);
@@ -183,6 +216,25 @@ const ListPage = () => {
             })}
           </SelectContent>
         </Select>
+        {/* Filter by banner */}
+        <Select onValueChange={setSearchBanner}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Search for banner" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem> {/* 将空值改为 'all' */}
+            <SelectItem value="banner">Has Banner</SelectItem>
+            <SelectItem value="selected">Selected Banner</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Button disabled={isLoading} onClick={search}>
+          {isLoading && (
+            <Loader2 className="w-4 h-4 animate-spin text-secondary" />
+          )}{" "}
+          Search
+        </Button>
+
         <Button disabled={isLoading} onClick={publishAll}>
           {isPublishAll && (
             <Loader2 className="w-4 h-4 animate-spin text-secondary" />
