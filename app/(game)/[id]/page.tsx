@@ -10,10 +10,10 @@ import toast from "react-hot-toast";
 
 const GameDetail = () => {
   const params = useParams();
-  const { id } = params;
+  // 移除解构赋值，直接通过params.id访问
+  const router = useRouter();
   const [game, setGame] = useState<Game | null>(null);
   const [isFrameLoaded, setIsFrameLoaded] = useState(false);
-  const router = useRouter();
 
   const visitor = useGameVistorStore((state: any) => state.visitor);
 
@@ -22,10 +22,10 @@ const GameDetail = () => {
   }, []);
 
   const addHistory = async () => {
-    console.log("addHistory", visitor);
     if (!visitor) return;
     try {
-      const res = await axios.post(`/api/game/${id}/history`, {
+      // 将id替换为params.id
+      const res = await axios.post(`/api/game/${params.id}/history`, {
         userId: visitor,
       });
       const data = await res.data;
@@ -42,11 +42,12 @@ const GameDetail = () => {
 
   const getGame = async () => {
     try {
-      const res = await axios.get(`/api/game/search/${id}`);
+      // 将id替换为params.id
+      const res = await axios.get(`/api/game/search/${params.id}`);
       const data = await res.data;
       let newUrl = data.url;
       if (data.url.includes("gamedistribution.com")) {
-        newUrl = `https://embed.gamedistribution.com/?url=${data.url}&width=800&height=600&language=es&gdpr-tracking=1&gdpr-targeting=1&gdpr-third-party=0&gd_sdk_referrer_url=${process.env.NEXTAUTH_URL}/${id}`;
+        newUrl = `https://embed.gamedistribution.com/?url=${data.url}&width=800&height=600&language=es&gdpr-tracking=1&gdpr-targeting=1&gdpr-third-party=0&gd_sdk_referrer_url=${process.env.NEXTAUTH_URL}/${params.id}`;
       }
       console.log("newUrl", process.env.NEXTAUTH_URL, newUrl);
       setGame({ ...data, url: newUrl });
@@ -67,9 +68,9 @@ const GameDetail = () => {
     <div className="flex flex-col items-center justify-between p-4 gap-4">
       {game && (
         <>
-          <div className="w-full relative overflow-hidden h-0 pt-[75%]">
+          <div className="w-full md:w-[800px] h-full md:h-[600px] relative overflow-hidden min-h-[600px]">
             <iframe
-              className="absolute top-0 left-0 w-full h-full"
+              className="absolute top-0 left-0 w-full md:w-[800px] h-full md:h-[600px]"
               src={game.url}
               onLoad={iframeLoaded}
               // sandbox="allow-same-origin allow-scripts"
@@ -77,7 +78,7 @@ const GameDetail = () => {
             />
             {!isFrameLoaded && (
               <div
-                className={`absolute w-full h-full top-0 left-0 bg-slate-400 flex items-center justify-center gap-x-2 z-10`}
+                className={`absolute top-0 left-0 w-full md:w-[800px] h-full md:h-[600px] bg-slate-400 flex items-center justify-center gap-x-2 z-10`}
               >
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Loading...

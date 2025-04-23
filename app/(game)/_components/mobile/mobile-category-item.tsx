@@ -37,7 +37,7 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
     <div
       onClick={() => queryForCategory(_id)}
       className={cn(
-        "w-full flex items-center gap-x-2 text-sky-500 text-sm font-[500] pl-8 transition-all hover:text-sky-500",
+        "w-full h-full flex items-center gap-x-2 text-sky-500 text-sm font-[500] pl-8 transition-all hover:text-sky-500",
         isActive && "bg-sky-400/80 text-white hover:bg-sky-500 hover:text-white"
       )}
     >
