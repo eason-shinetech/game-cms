@@ -75,19 +75,19 @@ const GameDetail = () => {
               src={game.url}
               onLoad={iframeLoaded}
               // sandbox="allow-same-origin allow-scripts"
-              allowFullScreen
-              allow="autoplay *; fullscreen *; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen={true}
+              loading="eager"
             />
             {!isFrameLoaded && (
               <div
-                className={`absolute top-0 left-0 w-full h-full bg-slate-400/40 flex items-center justify-center gap-x-2 z-10`}
+                className={`absolute top-0 left-0 w-full h-full bg-slate-400 flex items-center justify-center gap-x-2 z-10`}
               >
                 <Loader2 className="w-4 h-4 animate-spin" />
                 Loading...
               </div>
             )}
           </div>
-          <div className={`w-full flex flex-col gap-4`}>
+          <div className={`w-full flex flex-col gap-4 p-2`}>
             <h2 className="text-xl font-semibold text-slate-600">
               {game.title}
             </h2>
