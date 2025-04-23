@@ -7,7 +7,7 @@ const { auth } = NextAuth(authConfig);
 export default auth((req) => {
   const { nextUrl } = req;
   
-  console.log('Request URL:', nextUrl);
+  // console.log('Request URL:', nextUrl);
   // 加强路径匹配规则
   if (nextUrl.pathname.startsWith('/cdn-cgi')) {
     // 创建空响应避免 404
