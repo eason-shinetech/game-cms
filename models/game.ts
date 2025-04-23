@@ -30,7 +30,7 @@ export interface GameMonetizeResult {
 }
 
 export interface Game extends BaseModel {
-  gameId: string;
+  gameId?: string;
   title: string;
   description: string;
   instructions: string;
@@ -50,7 +50,7 @@ export interface Game extends BaseModel {
 
 export interface IGame extends Document {
   _id: string;
-  gameId: string;
+  gameId?: string;
   title: string;
   description: string;
   instructions: string;
@@ -72,7 +72,7 @@ export interface IGame extends Document {
 
 const GameSchema = new mongoose.Schema<IGame>(
   {
-    gameId: { type: String, required: true },
+    gameId: { type: String },
     title: { type: String, required: true },
     description: { type: String, required: true },
     instructions: { type: String },

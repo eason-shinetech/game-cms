@@ -32,6 +32,7 @@ const GameItem = ({ _id, title, thumb }: GameItemProps) => {
       onTouchStart={() => setHoverId(_id)}
       onMouseLeave={() => setHoverId(null)}
       onTouchCancel={() => setHoverId(null)}
+      onTouchEnd={() => setHoverId(null)}
       onClick={() => onClick(_id)}
     >
       <Image

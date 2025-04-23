@@ -6,6 +6,7 @@ import {
   List,
   LogOut,
   LogOutIcon,
+  PencilIcon,
   Search,
   Settings,
 } from "lucide-react";
@@ -36,9 +37,9 @@ const adminRoutes = [
     href: "/admin/game-import",
   },
   {
-    icon: Settings,
-    label: "Game Setting",
-    href: "/admin/game-setting",
+    icon: PencilIcon,
+    label: "Game Create",
+    href: "/admin/game-create",
   },
 ];
 
