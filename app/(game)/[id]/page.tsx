@@ -45,12 +45,13 @@ const GameDetail = () => {
       // 将id替换为params.id
       const res = await axios.get(`/api/game/search/${params.id}`);
       const data = await res.data;
-      let newUrl = data.url;
+      // let newUrl = data.url;
       // if (data.url.includes("gamedistribution.com")) {
       //   newUrl = `https://embed.gamedistribution.com/?url=${data.url}&width=800&height=600&language=es&gdpr-tracking=1&gdpr-targeting=1&gdpr-third-party=0&gd_sdk_referrer_url=${process.env.NEXTAUTH_URL}/${params.id}`;
       // }
-      console.log("newUrl", process.env.NEXTAUTH_URL, newUrl);
-      setGame({ ...data, url: newUrl });
+      // console.log("newUrl", process.env.NEXTAUTH_URL, newUrl);
+      // setGame({ ...data, url: newUrl });
+      setGame(data);
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong");
@@ -75,6 +76,7 @@ const GameDetail = () => {
               onLoad={iframeLoaded}
               // sandbox="allow-same-origin allow-scripts"
               allowFullScreen
+              allow="autoplay *; fullscreen *; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             />
             {!isFrameLoaded && (
               <div
