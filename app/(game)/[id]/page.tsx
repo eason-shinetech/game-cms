@@ -142,20 +142,19 @@ const GameDetail = () => {
       {game && (
         <>
           <div className="w-full h-[80vh] relative overflow-hidden md:w-[80vw] md:min-h-[600px]">
-            // 修改iframe的className
             <iframe
               ref={iframeRef}
-              className="absolute top-0 left-0 w-full h-full" // 移除 pointer-events-none
+              className="absolute top-0 left-0 w-full h-full z-10"
               src={game.url}
               onLoad={iframeLoaded}
               allowFullScreen={true}
               loading="eager"
             />
-            <div className="fixed top-20 right-4 z-[9999] flex flex-col gap-4">
+            <div className="md:hidden fixed top-20 right-4 z-[9999] flex flex-col gap-4">
               <Button
                 variant="outline"
                 onClick={handleFullscreen}
-                className="md:hidden landscape:hidden bg-background/80 backdrop-blur-sm"
+                className="landscape:hidden bg-background/80 backdrop-blur-sm"
               >
                 <FullscreenIcon className="!w-6 !h-6 text-slate-800" />
               </Button>
@@ -163,7 +162,7 @@ const GameDetail = () => {
               <Button
                 variant="outline"
                 onClick={handleRotate}
-                className="md:hidden bg-background/80 backdrop-blur-sm"
+                className="bg-background/80 backdrop-blur-sm"
               >
                 <RotateCcwSquareIcon className="!w-6 !h-6 text-slate-800" />
               </Button>
