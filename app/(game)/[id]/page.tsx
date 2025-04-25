@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Game } from "@/models/game";
 import { useGameVistorStore } from "@/store/game-visitor-store";
 import axios from "axios";
-import { FullscreenIcon, Loader2, RotateCcwSquareIcon } from "lucide-react";
+import { FullscreenIcon, Loader2, RotateCcw, RotateCcwSquareIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -24,6 +24,7 @@ const GameDetail = () => {
   const [isFrameLoaded, setIsFrameLoaded] = useState(false);
 
   const visitor = useGameVistorStore((state: any) => state.visitor);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
 
   useEffect(() => {
     getGame();
@@ -75,7 +76,6 @@ const GameDetail = () => {
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // 横屏切换逻辑
   // 移动端检测方法
   const isMobileDevice = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -133,8 +133,24 @@ const GameDetail = () => {
       await screen.orientation.lock(newOrientation);
     } catch (err) {
       console.error("屏幕旋转失败:", err);
-      toast.error("The screen rotation failed. Please check the device orientation lock Settings.");
+      toast.error(
+        "The screen rotation failed. Please check the device orientation lock Settings."
+      );
     }
+  };
+
+  // 在现有方法中添加
+  const reloadIframe = () => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+
+    // 方法1：通过修改src重新加载
+    const originalSrc = iframe.src;
+    iframe.src = "";
+    setTimeout(() => {
+      iframe.src = originalSrc;
+      setReloadTrigger((prev) => prev + 1);
+    }, 100);
   };
 
   return (
@@ -143,6 +159,7 @@ const GameDetail = () => {
         <>
           <div className="w-full h-[80vh] relative overflow-hidden md:w-[80vw] md:min-h-[600px]">
             <iframe
+              key={reloadTrigger}
               ref={iframeRef}
               className="absolute top-0 left-0 w-full h-full z-10"
               src={game.url}
@@ -150,23 +167,24 @@ const GameDetail = () => {
               allowFullScreen={true}
               loading="eager"
             />
-            <div className="md:hidden fixed top-20 right-4 z-[9999] flex flex-col gap-4">
-              <Button
-                variant="outline"
-                onClick={handleFullscreen}
-                className="landscape:hidden bg-background/80 backdrop-blur-sm"
-              >
-                <FullscreenIcon className="!w-6 !h-6 text-slate-800" />
-              </Button>
-
-              <Button
-                variant="outline"
-                onClick={handleRotate}
-                className="bg-background/80 backdrop-blur-sm"
-              >
-                <RotateCcwSquareIcon className="!w-6 !h-6 text-slate-800" />
-              </Button>
-            </div>
+            {isMobileDevice() && (
+              <div className="fixed top-20 right-4 z-[9999] flex flex-col gap-4">
+                <Button
+                  variant="outline"
+                  onClick={handleFullscreen}
+                  className="bg-background/80 backdrop-blur-sm"
+                >
+                  <FullscreenIcon className="!w-6 !h-6 text-slate-800" />
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={reloadIframe}
+                  className="bg-background/80 backdrop-blur-sm"
+                >
+                  <RotateCcw className="!w-6 !h-6 text-slate-800" />
+                </Button>
+              </div>
+            )}
             {!isFrameLoaded && (
               <div
                 className={`absolute top-0 left-0 w-full h-full bg-slate-400 flex items-center justify-center gap-x-2 z-10`}
