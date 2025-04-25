@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Game } from "@/models/game";
 import { useGameVistorStore } from "@/store/game-visitor-store";
 import axios from "axios";
-import { FullscreenIcon, Loader2 } from "lucide-react";
+import { FullscreenIcon, Loader2, RotateCcwSquareIcon } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -76,80 +76,98 @@ const GameDetail = () => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   // 横屏切换逻辑
+  // 移动端检测方法
+  const isMobileDevice = () => {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  };
+
   const handleFullscreen = async () => {
+    console.log("[执行屏幕全屏]");
+    if (!isMobileDevice()) return;
+
     try {
       const iframe = iframeRef.current;
       if (!iframe) return;
 
-      await iframe.requestFullscreen();
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await iframe.requestFullscreen();
 
-      // 增强设备支持检测
-      const isOrientationLockSupported = () => {
-        const isMobile =
-          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-            navigator.userAgent
-          );
-        const isPortrait = window.matchMedia("(orientation: portrait)").matches;
-        return isMobile && isPortrait && screen.orientation?.lock;
-      };
+        const fullscreenHandler = () => {
+          console.log("[fullscreenchange]", document.fullscreenElement);
+          if (!document.fullscreenElement) {
+            document.documentElement.classList.remove("landscape");
+            screen.orientation?.unlock();
+            // 强制重置iframe尺寸
+            iframe.style.removeProperty("transform");
+          }
+        };
 
-      if (isOrientationLockSupported()) {
-        await screen.orientation.lock("landscape").catch(() => null);
+        // 仅在document上监听事件
+        document.addEventListener("fullscreenchange", fullscreenHandler);
       }
-
-      // document.documentElement.classList.add("landscape");
-
     } catch (err) {
-      toast.error(`Full Screen Error: ${(err as Error).message}`);
+      toast.error(`Full screen error: ${(err as Error).message}`);
     }
   };
 
-  // 修改全屏事件处理逻辑
-  useEffect(() => {
-    if (!isFrameLoaded) return;
-    const iframe = iframeRef.current;
-    if (!iframe) return;
+  const handleRotate = async () => {
+    console.log("[执行屏幕旋转]");
+    if (!isMobileDevice()) return;
 
-    const fullscreenHandler = () => {
-      console.log("[fullscreenchange]", document.fullscreenElement);
-      if (!document.fullscreenElement) {
-        console.log("[执行退出清理]");
-        document.documentElement.classList.remove("landscape");
-        screen.orientation?.unlock();
-        // 强制重置iframe尺寸
-        iframe.style.removeProperty("transform");
+    try {
+      // 添加设备支持检测
+      if (!screen.orientation?.lock) {
+        toast.error("Please confirm that you have locked the phone rotation.");
+        return;
       }
-    };
+      // const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+      const currentOrientation = screen.orientation.type;
+      const newOrientation = currentOrientation.startsWith("portrait")
+        ? "landscape"
+        : "portrait";
 
-    // 仅在document上监听事件
-    document.addEventListener("fullscreenchange", fullscreenHandler);
-
-    return () => {
-      document.removeEventListener("fullscreenchange", fullscreenHandler);
-    };
-  }, [isFrameLoaded]);
+      await screen.orientation.lock(newOrientation);
+    } catch (err) {
+      console.error("屏幕旋转失败:", err);
+      toast.error("The screen rotation failed. Please check the device orientation lock Settings.");
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-between p-x-6 pt-2 gap-4">
       {game && (
         <>
           <div className="w-full h-[80vh] relative overflow-hidden md:w-[80vw] md:min-h-[600px]">
+            // 修改iframe的className
             <iframe
               ref={iframeRef}
-              className="absolute top-0 left-0 w-full h-full pointer-events-none" // 添加 pointer-events-none
+              className="absolute top-0 left-0 w-full h-full" // 移除 pointer-events-none
               src={game.url}
               onLoad={iframeLoaded}
               allowFullScreen={true}
               loading="eager"
             />
-            <Button
-              variant="ghost"
-              onClick={handleFullscreen}
-              className="fixed md:hidden landscape:hidden top-20 right-4 z-[9999]"
-              style={{ transform: "translateZ(0)" }} // 强制创建新层叠上下文
-            >
-              <FullscreenIcon className="!w-6 !h-6 text-slate-800" />
-            </Button>
+            <div className="fixed top-20 right-4 z-[9999] flex flex-col gap-4">
+              <Button
+                variant="outline"
+                onClick={handleFullscreen}
+                className="md:hidden landscape:hidden bg-background/80 backdrop-blur-sm"
+              >
+                <FullscreenIcon className="!w-6 !h-6 text-slate-800" />
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={handleRotate}
+                className="md:hidden bg-background/80 backdrop-blur-sm"
+              >
+                <RotateCcwSquareIcon className="!w-6 !h-6 text-slate-800" />
+              </Button>
+            </div>
             {!isFrameLoaded && (
               <div
                 className={`absolute top-0 left-0 w-full h-full bg-slate-400 flex items-center justify-center gap-x-2 z-10`}
