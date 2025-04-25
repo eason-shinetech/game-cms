@@ -137,7 +137,7 @@ const ListPage = () => {
   };
 
   useEffect(() => {
-    setPage(1);
+    // setPage(1);
     setIsMounted(false);
     getGameConfig().then(() => {
       setIsMounted(true);
@@ -190,7 +190,12 @@ const ListPage = () => {
       <div className="flex items-center gap-x-4 my-4">
         <SearchInput setKeyword={setKeyword} />
         {/* Filter by status */}
-        <Select onValueChange={setStatus}>
+        <Select
+          onValueChange={(val) => {
+            setPage(1);
+            setStatus(val);
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a status" />
           </SelectTrigger>
@@ -201,7 +206,12 @@ const ListPage = () => {
           </SelectContent>
         </Select>
         {/* Filter by category */}
-        <Select onValueChange={setCategoryId}>
+        <Select
+          onValueChange={(val) => {
+            setPage(1);
+            setCategoryId(val);
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a category" />
           </SelectTrigger>
@@ -217,7 +227,12 @@ const ListPage = () => {
           </SelectContent>
         </Select>
         {/* Filter by banner */}
-        <Select onValueChange={setSearchBanner}>
+        <Select
+          onValueChange={(val) => {
+            setPage(1);
+            setSearchBanner(val);
+          }}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Search for banner" />
           </SelectTrigger>

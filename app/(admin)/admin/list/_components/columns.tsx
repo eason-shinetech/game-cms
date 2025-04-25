@@ -236,7 +236,6 @@ const setBanner = async (game: GameList) => {
     }
 
     toast.success(`Game “${game.title}” set banner successfully!`);
-    
   } catch (err) {
     console.log(err);
     toast.error("Something went wrong");
@@ -245,6 +244,8 @@ const setBanner = async (game: GameList) => {
 
 const addClick = async (game: GameList) => {
   try {
+    await axios.post(`/api/game/${game._id}/click`);
+    toast.success(`Game “${game.title}” add click successfully!`);
   } catch (err) {
     console.log(err);
     toast.error("Something went wrong");

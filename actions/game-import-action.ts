@@ -24,7 +24,9 @@ export async function saveGameDistributionGames(
 
     // 最后处理games
     const addGames: Omit<Game, PropsCURDOmitted>[] = games
-      .filter((g) => !!g.title && !!g.width && !!g.height)
+      .filter(
+        (g) => !!g.title && !!g.width && !!g.height && !!g.thumb && !!g.url
+      )
       .map((game) => {
         if (game.categorys.length === 0) {
           game.categorys = ["Others"];
