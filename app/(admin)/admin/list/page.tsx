@@ -137,7 +137,6 @@ const ListPage = () => {
   };
 
   useEffect(() => {
-    // setPage(1);
     setIsMounted(false);
     getGameConfig().then(() => {
       setIsMounted(true);
