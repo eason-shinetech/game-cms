@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Game } from "@/models/game";
 import { useGameVistorStore } from "@/store/game-visitor-store";
 import axios from "axios";
-import { FullscreenIcon, Loader2, RotateCcw, RotateCcwSquareIcon } from "lucide-react";
+import { FullscreenIcon, Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -24,7 +24,6 @@ const GameDetail = () => {
   const [isFrameLoaded, setIsFrameLoaded] = useState(false);
 
   const visitor = useGameVistorStore((state: any) => state.visitor);
-  const [reloadTrigger, setReloadTrigger] = useState(0);
 
   useEffect(() => {
     getGame();
@@ -139,27 +138,12 @@ const GameDetail = () => {
     }
   };
 
-  // 在现有方法中添加
-  const reloadIframe = () => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
-
-    // 方法1：通过修改src重新加载
-    const originalSrc = iframe.src;
-    iframe.src = "";
-    setTimeout(() => {
-      iframe.src = originalSrc;
-      setReloadTrigger((prev) => prev + 1);
-    }, 100);
-  };
-
   return (
     <div className="flex flex-col items-center justify-between p-x-6 pt-2 gap-4">
       {game && (
         <>
           <div className="w-full h-[80vh] relative overflow-hidden md:w-[80vw] md:min-h-[600px]">
             <iframe
-              key={reloadTrigger}
               ref={iframeRef}
               className="absolute top-0 left-0 w-full h-full z-10"
               src={game.url}
@@ -175,13 +159,6 @@ const GameDetail = () => {
                   className="bg-background/80 backdrop-blur-sm"
                 >
                   <FullscreenIcon className="!w-6 !h-6 text-slate-800" />
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={reloadIframe}
-                  className="bg-background/80 backdrop-blur-sm"
-                >
-                  <RotateCcw className="!w-6 !h-6 text-slate-800" />
                 </Button>
               </div>
             )}
