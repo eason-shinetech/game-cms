@@ -62,8 +62,8 @@ const GameMobileSidebar = () => {
             <div className="my-4"></div>
             <SheetClose>
               <Link href={`/about`}>
-                <div className="w-full h-full flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500">
-                  <div className="flex items-center">About Us</div>
+              <div className="w-full h-full flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500">
+                  <div className="flex items-center gap-x-2 py-2">About Us</div>
                 </div>
               </Link>
             </SheetClose>
