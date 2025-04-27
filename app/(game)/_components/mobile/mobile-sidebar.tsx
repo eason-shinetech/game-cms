@@ -13,6 +13,8 @@ import {
 import { Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import Logo from "@/components/commons/logo";
+import Link from "next/link";
 
 const GameMobileSidebar = () => {
   const [categories, setCategories] = useState([]);
@@ -33,20 +35,16 @@ const GameMobileSidebar = () => {
   return (
     <div className="flex flex-col">
       <Sheet>
-        <SheetTrigger
-          asChild
-          className="md:hidden hover:opacity-75 transition"
-        >
+        <SheetTrigger asChild className="md:hidden hover:opacity-75 transition">
           <Menu />
         </SheetTrigger>
         <SheetContent side="left" className="p-0 bg-white overflow-auto">
           <SheetHeader>
-            <SheetTitle>Categories</SheetTitle>
-            <SheetDescription className="text-xs text-slate-500">
-              Select a category to search for games
-            </SheetDescription>
+            <SheetTitle>
+              <Logo />
+            </SheetTitle>
           </SheetHeader>
-          <div className="grid gap-4 py-4">
+          <div className="grid gap-2 py-2">
             <SheetClose>
               <GameMobileCategoryItem key={`all`} _id={``} name={`All`} />
             </SheetClose>
@@ -61,36 +59,38 @@ const GameMobileSidebar = () => {
                 </SheetClose>
               );
             })}
+            <div className="my-4"></div>
+            <SheetClose>
+              <Link href={`/about`}>
+                <div className="w-full h-full flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500">
+                  <div className="flex items-center">About Us</div>
+                </div>
+              </Link>
+            </SheetClose>
+            <SheetClose>
+              <Link href={`/contact`}>
+                <div className="w-full h-full flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500">
+                  <div className="flex items-center gap-x-2 py-2">Contact</div>
+                </div>
+              </Link>
+            </SheetClose>
+            <SheetClose>
+              <Link href={`/terms`}>
+                <div className="w-full h-full flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500">
+                  <div className="flex items-center gap-x-2 py-2">Terms</div>
+                </div>
+              </Link>
+            </SheetClose>
+            <SheetClose>
+              <Link href={`/privacy`}>
+                <div className="w-full h-full flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500">
+                  <div className="flex items-center gap-x-2 py-2">Privacy</div>
+                </div>
+              </Link>
+            </SheetClose>
           </div>
         </SheetContent>
       </Sheet>
-      {/* <Sheet>
-        <SheetTrigger
-          className="md:hidden pr-4 hover:opacity-75 transition"
-          asChild
-        >
-          <Menu />
-        </SheetTrigger>
-        <SheetContent side="left" className="p-0 bg-white overflow-auto">
-          <SheetTitle className="p-4 text-lg font-semibold text-slate-600 mb-2 border border-b-2">
-            Category
-          </SheetTitle>
-          <SheetClose asChild>
-            <GameMobileCategoryItem key={`all`} _id={``} name={`All`} />
-          </SheetClose>
-          {categories.map((category: any) => {
-            return (
-              <SheetClose key={`close_${category._id}`} asChild>
-                <GameMobileCategoryItem
-                  key={category._id}
-                  _id={category._id.toString()}
-                  name={category.name}
-                />
-              </SheetClose>
-            );
-          })}
-        </SheetContent>
-      </Sheet> */}
     </div>
   );
 };

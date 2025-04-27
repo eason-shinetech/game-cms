@@ -1,6 +1,7 @@
 import ToasterProvider from "@/components/providers/toaster-provider";
 import GameHeader from "./_components/header";
 import VisitorPage from "./_components/visitor";
+import Footer from "./_components/footer";
 
 export default async function GameLayout({
   children,
@@ -17,6 +18,9 @@ export default async function GameLayout({
         {children}
         <ToasterProvider />
       </main>
+      <div className="h-[40px] fixed bottom-0 w-full z-50">
+        <Footer />
+      </div>
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import GameItem from "../_components/game-item";
 import dayjs from "dayjs";
+import { Loader2 } from "lucide-react";
 
 const HistoryPage = () => {
   const visitor = useGameVistorStore((state: any) => state.visitor);
@@ -14,6 +15,7 @@ const HistoryPage = () => {
   const [yesterdayHistories, setYesterdayHistories] = useState<GameHistory[]>(
     []
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [oldHistories, setOldHistories] = useState<GameHistory[]>([]);
 
   const getHistories = useCallback(async () => {
@@ -21,6 +23,7 @@ const HistoryPage = () => {
       if (!visitor) {
         return;
       }
+      setIsLoading(true);
       const res = await axios.get(`/api/game/history/${visitor}`);
       const data = res.data as GameHistory[];
       setHistories(data);
@@ -35,15 +38,21 @@ const HistoryPage = () => {
         (history) => dayjs(history.date).format("YYYY-MM-DD") === yesterday
       );
       setYesterdayHistories(yesterdayData);
-      const oldData = data.filter(
+      const allOldData = data.filter(
         (history) =>
           dayjs(history.date).format("YYYY-MM-DD") !== today &&
           dayjs(history.date).format("YYYY-MM-DD") !== yesterday
+      );
+      const oldData = allOldData.filter(
+        (history, index, self) =>
+          index === self.findIndex((h) => h.gameId === history.gameId)
       );
       setOldHistories(oldData);
     } catch (error) {
       console.error(error);
       toast.error("Failed to get histories");
+    } finally {
+      setIsLoading(false);
     }
   }, [visitor]);
 
@@ -53,11 +62,18 @@ const HistoryPage = () => {
 
   return (
     <div className="flex flex-col gap-4 px-4 mt-8">
-      {histories.length === 0 ? (
+      {isLoading && (
+        <div className="w-full h-[400px] flex items-center justify-center">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          <span className="text-center text-slate-500">Loading...</span>
+        </div>
+      )}
+      {histories.length === 0 && !isLoading && (
         <div className="w-full h-[100px] flex items-center justify-center text-slate-500">
           No data
         </div>
-      ) : (
+      )}
+      {histories.length > 0 && (
         <>
           {todayHistories.length > 0 && (
             <div className="w-full flex flex-col justify-between">

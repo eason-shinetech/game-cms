@@ -54,7 +54,7 @@ const GameList = () => {
 
   return (
     <>
-      <div className="w-full shadow-sm">
+      <div className="w-full rounded-md shadow-sm">
         <GameLoadMore
           data={games}
           currentPage={page}
@@ -64,7 +64,7 @@ const GameList = () => {
         />
       </div>
       {games.length === 0 && !isLoading && !hasMore && (
-        <div className="w-full h-[100px] flex items-center justify-center text-center text-slate-400 text-sm shadow-sm">
+        <div className="w-full h-[100px] flex items-center justify-center text-center text-slate-400 rounded-md text-sm shadow-sm">
           No Games Found
         </div>
       )}
