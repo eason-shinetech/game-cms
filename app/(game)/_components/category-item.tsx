@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { CategoryMapping } from "@/models/game-category";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 
@@ -30,6 +31,7 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
 
     router.push(url);
   };
+  const Icon = CategoryMapping.find((item) => item.name === name)?.icon;
 
   return (
     <Button
@@ -41,6 +43,7 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
           "bg-sky-500 text-white hover:bg-sky-700 hover:text-white"
       )}
     >
+      {Icon && <Icon className="w-4 h-4" />}
       {name}
     </Button>
   );
