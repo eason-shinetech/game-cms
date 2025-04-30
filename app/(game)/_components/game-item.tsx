@@ -28,7 +28,7 @@ const GameItem = ({ _id, title, titleUrl, thumb }: GameItemProps) => {
   };
   return (
     <div
-      className="relative flex items-center justify-center cursor-pointer shadow-sm"
+      className="relative h-fit flex items-center justify-center cursor-pointer shadow-sm"
       onMouseEnter={() => setHoverId(_id)}
       onTouchStart={() => setHoverId(_id)}
       onMouseLeave={() => setHoverId(null)}
@@ -40,7 +40,7 @@ const GameItem = ({ _id, title, titleUrl, thumb }: GameItemProps) => {
         src={thumb}
         alt={title}
         width={512}
-        height={512}
+        height={384}
         priority={true} //预加载
       />
       {hoverId === _id && (
