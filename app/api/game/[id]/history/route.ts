@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import dayjs from "dayjs";
 import HistoryModel, { IHistory } from "@/models/history";
 import mongoose from "mongoose";
+import GameModel from "@/models/game";
 
 export async function POST(
   req: Request,
@@ -16,17 +17,21 @@ export async function POST(
     }
     console.log("Add Game History", userId, id);
     await dbConnect();
+    const game = await GameModel.findOne({ titleUrl: id });
+    if (!game) {
+      return new NextResponse("Game Not Found", { status: 404 });
+    }
     const date = dayjs().format("YYYY-MM-DD");
     const history = await HistoryModel.findOne({
       userId,
       date,
-      gameId: id,
+      gameId: game._id,
     });
     if (!history) {
       await HistoryModel.create({
         userId,
         date,
-        gameId: id,
+        gameId: game._id,
       });
     }
     return new NextResponse("Post Game History Updated", { status: 200 });

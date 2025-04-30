@@ -14,7 +14,7 @@ export default async function GameLayout({
       <div className="h-[60px] fixed inset-y-0 w-full z-50">
         <GameHeader />
       </div>
-      <main className="h-full pt-[60px] md:px-20">
+      <main className="h-full pt-[60px] pb-[40px] md:px-20">
         {children}
         <ToasterProvider />
       </main>

@@ -15,14 +15,14 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "All";
   const title = searchParams.get("title");
-  const queryForCategory = (categoryId: string) => {
+  const queryForCategory = (categoryName: string) => {
     const url = qs.stringifyUrl(
       {
         url: pathname,
         query: {
-          categoryId: categoryId,
+          categoryName: categoryName === "All" ? "" : categoryName,
           title: title,
         },
       },
@@ -35,11 +35,11 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
 
   return (
     <Button
-      onClick={() => queryForCategory(_id)}
+      onClick={() => queryForCategory(name)}
       variant={`outline`}
       className={cn(
         "text-xs text-sky-700 hover:text-sky-700 rounded-2xl cursor-pointer",
-        categoryId === _id &&
+        categoryName === name &&
           "bg-sky-500 text-white hover:bg-sky-700 hover:text-white"
       )}
     >

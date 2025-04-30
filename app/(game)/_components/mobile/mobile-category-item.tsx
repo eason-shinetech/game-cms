@@ -14,17 +14,17 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "";
   const title = searchParams.get("title");
 
-  const isActive = categoryId === _id;
+  const isActive = categoryName === name;
 
-  const queryForCategory = (categoryId: string) => {
+  const queryForCategory = (categoryName: string) => {
     const url = qs.stringifyUrl(
       {
         url: pathname,
         query: {
-          categoryId: categoryId,
+          categoryName: categoryName,
           title: title,
         },
       },
@@ -38,7 +38,7 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
 
   return (
     <div
-      onClick={() => queryForCategory(_id)}
+      onClick={() => queryForCategory(name)}
       className={cn(
         "w-full h-full flex items-center gap-x-2 text-sky-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500",
         isActive && "bg-sky-400/80 text-white hover:bg-sky-500 hover:text-white"

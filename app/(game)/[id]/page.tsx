@@ -32,7 +32,7 @@ const GameDetail = () => {
   const addHistory = async () => {
     if (!visitor) return;
     try {
-      // 将id替换为params.id
+      // 将id替换为params.id --> id是titleUrl
       const res = await axios.post(`/api/game/${params.id}/history`, {
         userId: visitor,
       });
@@ -50,7 +50,7 @@ const GameDetail = () => {
 
   const getGame = async () => {
     try {
-      // 将id替换为params.id
+      // 将id替换为params.id --> id是titleUrl
       const res = await axios.get(`/api/game/search/${params.id}`);
       const data = await res.data;
       let newUrl = data.url;

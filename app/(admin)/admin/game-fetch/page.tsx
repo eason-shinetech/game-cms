@@ -69,6 +69,10 @@ const GameFetchPage = () => {
       toast.error("No Game need to import!");
       return;
     }
+    games.forEach((game) => {
+      game.platform = type;
+      game.popularity = popularity;
+    });
     try {
       setIsLoading(true);
       const res = await axios.post(`/api/game/fetch`, games);

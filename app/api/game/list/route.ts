@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const sort = searchParams.get("sort");
     const order = searchParams.get("order") === "asc" ? 1 : -1;
     const status = searchParams.get("status");
-    const categoryId = searchParams.get("categoryId");
+    const categoryName = searchParams.get("categoryName");
     const isOnlyBanner = searchParams.get("isOnlyBanner");
     //searchSelectedBanner
     const searchSelectedBanner = searchParams.get("searchSelectedBanner");
@@ -37,8 +37,8 @@ export async function GET(req: NextRequest) {
     if (status) {
       conds.push({ status: status });
     }
-    if (categoryId) {
-      conds.push({ categoryIds: convertToMongoId(categoryId) });
+    if (categoryName) {
+      conds.push({ categories: categoryName });
     }
     if (keyword) {
       conds.push(dbquery);

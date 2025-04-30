@@ -7,13 +7,13 @@ export async function GET(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const title = searchParams.get("title");
-    const categoryId = searchParams.get("categoryId");
+    const categoryName = searchParams.get("categoryName");
     const page = Number(searchParams.get("page")) || 1;
     const pageSize = Number(searchParams.get("pageSize")) || 20;
     const conds: any[] = [{ status: "published" }];
     await dbConnect();
-    if (categoryId) {
-      conds.push({ categoryIds: convertToMongoId(categoryId) });
+    if (categoryName) {
+      conds.push({ categories: categoryName });
     }
     if (title) {
       conds.push({
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
     const aggr: any[] = [
       { $match: { $and: conds } },
-      { $project: { title: 1, thumb: 1, clickCount: 1 } },
+      { $project: { title: 1, titleUrl: 1, thumb: 1, clickCount: 1 } },
       {
         $facet: {
           total: [{ $count: "total" }],

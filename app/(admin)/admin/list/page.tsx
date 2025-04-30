@@ -18,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 import { GameConfig } from "@/models/game-config";
 
 const ListPage = () => {
@@ -50,7 +49,7 @@ const ListPage = () => {
   );
 
   const [status, setStatus] = React.useState("");
-  const [categoryId, setCategoryId] = React.useState("");
+  const [categoryName, setCategoryName] = React.useState("");
   const [searchBanner, setSearchBanner] = React.useState("");
 
   const [refreshKey, setRefreshKey] = useState(0);
@@ -100,9 +99,9 @@ const ListPage = () => {
         // 添加条件判断
         url += `&status=${status}`;
       }
-      if (categoryId && categoryId !== "all") {
+      if (categoryName && categoryName !== "all") {
         // 添加条件判断
-        url += `&categoryId=${categoryId}`;
+        url += `&categoryName=${categoryName}`;
       }
       if (searchBanner === "banner") {
         // 添加条件判断
@@ -116,13 +115,6 @@ const ListPage = () => {
       const data = res.data.data.map((game: Game) => ({
         ...game,
         from: game.fetchFrom,
-        categories:
-          categories
-            .filter((c) => game.categoryIds.includes(c._id))
-            ?.map((c) => c.name) || [],
-        tags:
-          tags.filter((t) => game.tagIds.includes(t._id))?.map((c) => c.name) ||
-          [],
         isSetBanner: gameConfig?.banners?.length
           ? gameConfig.banners.some((b) => b.id === game._id)
           : false,
@@ -208,7 +200,7 @@ const ListPage = () => {
         <Select
           onValueChange={(val) => {
             setPage(1);
-            setCategoryId(val);
+            setCategoryName(val);
           }}
         >
           <SelectTrigger className="w-[180px]">
@@ -218,7 +210,7 @@ const ListPage = () => {
             <SelectItem value="all">All</SelectItem> {/* 将空值改为 'all' */}
             {categories.map((category) => {
               return (
-                <SelectItem key={category._id} value={category._id}>
+                <SelectItem key={category._id} value={category.name}>
                   {category.name}
                 </SelectItem>
               );

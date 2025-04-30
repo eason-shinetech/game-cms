@@ -7,7 +7,7 @@ export interface GameDistributionResult {
   description: string;
   instructions: string;
   url: string;
-  categorys: string[];
+  categories: string[];
   tags: string[];
   bannerImage: string;
   images: string[];
@@ -27,6 +27,9 @@ export interface GameMonetizeResult {
   thumb: string;
   width: number;
   height: number;
+
+  platform: string;
+  popularity: string;
 }
 
 export interface Game extends BaseModel {
@@ -37,11 +40,10 @@ export interface Game extends BaseModel {
   url: string;
   thumb: string;
   bannerImage?: string;
-  images?: string[];
   width: number;
   height: number;
-  categoryIds: string[];
-  tagIds: string[];
+  categories: string[];
+  tags: string[];
   lastUpdated?: Date;
   fetchFrom: string;
   status?: string;
@@ -52,6 +54,7 @@ export interface IGame extends Document {
   _id: string;
   gameId?: string;
   title: string;
+  titleUrl: string;
   description: string;
   instructions: string;
   url: string;
@@ -60,10 +63,12 @@ export interface IGame extends Document {
   images: string[]; //其他尺寸图片
   width: number;
   height: number;
-  categoryIds: mongoose.Types.ObjectId[];
-  tagIds: mongoose.Types.ObjectId[];
+  categories: string[];
+  tags: string[];
   lastUpdated: Date;
   fetchFrom: string;
+  platforms: string[];
+  popularity: string;
   status: string;
   clickCount: number;
   createdAt: Date;
@@ -74,18 +79,23 @@ const GameSchema = new mongoose.Schema<IGame>(
   {
     gameId: { type: String },
     title: { type: String, required: true },
+    titleUrl: { type: String, required: true }, //For SEO
     description: { type: String, required: true },
     instructions: { type: String },
     url: { type: String, required: true },
     thumb: { type: String, required: true },
     bannerImage: { type: String },
-    images: { type: [String], default: [] },
     width: { type: Number, required: true },
     height: { type: Number, required: true },
-    categoryIds: { type: [mongoose.Types.ObjectId], default: [] }, // ObjectId
-    tagIds: { type: [mongoose.Types.ObjectId], default: [] }, // ObjectId
+    categories: { type: [String], default: [] }, // ObjectId
+    tags: { type: [String], default: [] }, // ObjectId
     lastUpdated: { type: Date },
     fetchFrom: { type: String },
+    platforms: {
+      type: [String],
+      required: true,
+    },
+    popularity: String,
     status: {
       type: String,
       required: true,
@@ -103,10 +113,12 @@ const GameSchema = new mongoose.Schema<IGame>(
 export type GameDocument = mongoose.Document & IGame;
 
 //增加索引
-GameSchema.index({ gameId: 1 });
-GameSchema.index({ title: "text", fetchFrom: 1 });
-GameSchema.index({ categoryIds: 1, status: 1 });
-GameSchema.index({ tagIds: 1, status: 1 });
+GameSchema.index({ title: 1 }, { unique: true });
+GameSchema.index({ titleUrl: 1 }, { unique: true });
+GameSchema.index({ platform: 1 });
+GameSchema.index({ popularity: 1, status: 1 });
+GameSchema.index({ categories: 1, status: 1 });
+GameSchema.index({ tags: 1, status: 1 });
 
 const GameModel =
   mongoose.models?.Game || mongoose.model<IGame>("Game", GameSchema);

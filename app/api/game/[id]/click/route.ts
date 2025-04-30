@@ -10,11 +10,11 @@ export async function POST(
     const { id } = await params;
     console.log("Game Click:", id);
     await dbConnect();
-    const game = await GameModel.findById(id);
+    const game = await GameModel.findOne({ titleUrl: id });
     if (!game) {
       return new NextResponse("Game not found", { status: 404 });
     }
-    await GameModel.updateOne({ _id: id }, { $inc: { clickCount: 1 } });
+    await GameModel.updateOne({ _id: game._id }, { $inc: { clickCount: 1 } });
     return new NextResponse("Game Clicked", { status: 200 });
   } catch (error) {
     console.log("[Game Click Error]", error);

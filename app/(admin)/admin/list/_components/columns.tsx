@@ -244,7 +244,7 @@ const setBanner = async (game: GameList) => {
 
 const addClick = async (game: GameList) => {
   try {
-    await axios.post(`/api/game/${game._id}/click`);
+    await axios.post(`/api/game/list/${game._id}/click`);
     toast.success(`Game “${game.title}” add click successfully!`);
   } catch (err) {
     console.log(err);
