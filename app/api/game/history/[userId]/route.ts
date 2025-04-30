@@ -27,11 +27,14 @@ export async function GET(
         { title: 1, thumb: 1, description: 1 }
       );
       for (const history of data) {
-        const game = gameData.find((item) => item._id.toString() === history.gameId.toString());
+        const game = gameData.find(
+          (item) => item._id.toString() === history.gameId.toString()
+        );
         if (game) {
           histories.push({
             gameId: history.gameId,
             gameTitle: game.title,
+            gameTitleUrl: game.titleUrl,
             gameThumb: game.thumb,
             gameDescription: game.description,
             date: history.date,

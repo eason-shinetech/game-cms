@@ -87,6 +87,7 @@ const HistoryPage = () => {
                     key={history.gameId}
                     _id={history.gameId}
                     title={history.gameTitle}
+                    titleUrl={history.gameTitleUrl}
                     thumb={history.gameThumb}
                   />
                 ))}
@@ -105,6 +106,7 @@ const HistoryPage = () => {
                     key={history.gameId}
                     _id={history.gameId}
                     title={history.gameTitle}
+                    titleUrl={history.gameTitleUrl}
                     thumb={history.gameThumb}
                   />
                 ))}
@@ -123,6 +125,7 @@ const HistoryPage = () => {
                     key={history.gameId}
                     _id={history.gameId}
                     title={history.gameTitle}
+                    titleUrl={history.gameTitleUrl}
                     thumb={history.gameThumb}
                   />
                 ))}

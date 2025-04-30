@@ -3,6 +3,7 @@ import mongoose, { Document } from "mongoose";
 export interface GameHistory {
   gameId: string;
   gameTitle: string;
+  gameTitleUrl: string;
   gameThumb: string;
   gameDescription: string;
   date: Date;
