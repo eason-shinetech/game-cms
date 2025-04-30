@@ -28,7 +28,7 @@ const GameBanner = () => {
   }, []);
 
   return (
-    <div className="hidden w-full md:grid grid-rows-1 grid-cols-4 gap-4 mt-4 cursor-pointer rounded-md p-2 shadow-sm">
+    <div className="hidden w-full md:grid grid-rows-1 grid-cols-4 gap-4 mt-4 cursor-pointer rounded-md">
       {isLoading && (
         <div className="col-span-full w-full h-[140px] flex items-center justify-center">
           <Loader2 className="w-4 h-4 animate-spin" />

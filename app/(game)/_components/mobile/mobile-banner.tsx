@@ -37,7 +37,7 @@ const MobileBanner = () => {
   }, []);
 
   return (
-    <div className="w-full md:hidden mt-4 cursor-pointer">
+    <div className="w-full md:hidden mt-4 cursor-pointer p-2">
       {isLoading && (
         <div className="w-full h-[140px] flex items-center justify-center">
           <Loader2 className="w-4 h-4 animate-spin" />
