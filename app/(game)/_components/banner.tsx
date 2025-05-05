@@ -6,9 +6,9 @@ import BannerItem from "./banner-item";
 import { Loader2 } from "lucide-react";
 
 const GameBanner = () => {
-  const [banners, setBanners] = useState<{ id: string; bannerImage: string }[]>(
-    []
-  );
+  const [banners, setBanners] = useState<
+    { id: string; titleUrl: string; bannerImage: string }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const getBanners = async () => {
     try {
@@ -39,6 +39,7 @@ const GameBanner = () => {
         <BannerItem
           key={index}
           id={banner.id.toString()}
+          titleUrl={banner.titleUrl}
           bannerImage={banner.bannerImage}
         />
       ))}

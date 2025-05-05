@@ -31,11 +31,11 @@ const adminRoutes = [
     label: "Game Fetch",
     href: "/admin/game-fetch",
   },
-  // {
-  //   icon: Import,
-  //   label: "Game Import",
-  //   href: "/admin/game-import",
-  // },
+  {
+    icon: Import,
+    label: "Fetch Url",
+    href: "/admin/fetch-url",
+  },
   {
     icon: PencilIcon,
     label: "Game Create",

@@ -29,7 +29,7 @@ export async function saveGameMonetizeGames(games: GameMonetizeResult[]) {
     const titles = games.map((game) => game.title.trim());
     // 查找已存在的games
     const existGames = await GameModel.find({ title: { $in: titles } });
-    
+
     // 最后处理games
     const addGames: Omit<Game, PropsCURDOmitted>[] = games
       .filter((g) => !!g.title && !!g.width && !!g.height)
@@ -62,7 +62,7 @@ export async function saveGameMonetizeGames(games: GameMonetizeResult[]) {
           categories: [categoryName],
           tags: tags,
           lastUpdated: new Date(),
-          fetchFrom: "monetize",
+          fetchFrom: game.from || "monetize",
           platforms: platforms,
           popularity: game.popularity,
         };

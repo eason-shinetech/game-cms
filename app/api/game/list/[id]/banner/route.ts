@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(
   req: Request,
-  { params  }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -23,6 +23,7 @@ export async function POST(
         banners: [
           {
             id: game._id,
+            titleUrl: game.titleUrl,
             bannerImage: game.bannerImage,
           },
         ],
@@ -34,6 +35,7 @@ export async function POST(
           $push: {
             banners: {
               id: game._id,
+              titleUrl: game.titleUrl,
               bannerImage: game.bannerImage,
             },
           },

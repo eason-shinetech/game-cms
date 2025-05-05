@@ -31,19 +31,6 @@ export type GameList = {
 // 修改 columns 定义，接收 onRefresh 参数
 export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
   {
-    accessorKey: "isSetBanner",
-    header: () => "Banner",
-    size: 50,
-    cell: ({ row }) => {
-      const isSetBanner = Boolean(row.getValue("isSetBanner"));
-      return (
-        <div className="w-[50px] flex items-center justify-center">
-          {isSetBanner && <FlagIcon className="w-4 h-4" />}
-        </div>
-      );
-    },
-  },
-  {
     accessorKey: "thumb",
     header: () => "Thumb",
     size: 100,
@@ -82,6 +69,19 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
       return (
         <div className="font-semibold break-words whitespace-pre-wrap">
           {title}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "isSetBanner",
+    header: () => "Banner",
+    size: 50,
+    cell: ({ row }) => {
+      const isSetBanner = Boolean(row.getValue("isSetBanner"));
+      return (
+        <div className="w-[50px] flex items-center justify-center">
+          {isSetBanner && <FlagIcon className="w-4 h-4" />}
         </div>
       );
     },

@@ -30,6 +30,7 @@ export interface GameMonetizeResult {
 
   platform: string;
   popularity: string;
+  from?: string;
 }
 
 export interface Game extends BaseModel {

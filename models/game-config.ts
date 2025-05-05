@@ -7,7 +7,7 @@ export interface GameConfig {
 
 export interface IGameConfig extends Document {
   _id: string;
-  banners: { id: mongoose.Types.ObjectId; bannerImage: string }[];
+  banners: { id: mongoose.Types.ObjectId; titltUrl:string; bannerImage: string }[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -15,6 +15,7 @@ export interface IGameConfig extends Document {
 const bannerSchema = new mongoose.Schema(
   {
     id: mongoose.Types.ObjectId,
+    titleUrl: String,
     bannerImage: String,
   },
   {
