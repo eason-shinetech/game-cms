@@ -1,5 +1,4 @@
 import dbConnect from "@/lib/db";
-import { convertToMongoId } from "@/lib/utils";
 import GameModel from "@/models/game";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,6 +7,7 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const title = searchParams.get("title");
     const categoryName = searchParams.get("categoryName");
+    const popularity = searchParams.get("popularity")
     const page = Number(searchParams.get("page")) || 1;
     const pageSize = Number(searchParams.get("pageSize")) || 20;
     const conds: any[] = [{ status: "published" }];
@@ -22,6 +22,9 @@ export async function GET(req: NextRequest) {
           $options: "i",
         },
       });
+    }
+    if (popularity) {
+      conds.push({ popularity: popularity });
     }
     const aggr: any[] = [
       { $match: { $and: conds } },

@@ -16,6 +16,7 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
   const pathname = usePathname();
   const categoryName = searchParams.get("categoryName") || "";
   const title = searchParams.get("title");
+  const popularity = searchParams.get("popularity");
 
   const isActive = categoryName === name;
 
@@ -26,6 +27,7 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
         query: {
           categoryName: categoryName,
           title: title,
+          popularity: popularity,
         },
       },
       { skipEmptyString: true, skipNull: true }

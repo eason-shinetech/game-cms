@@ -17,6 +17,7 @@ export const SearchInput = () => {
   const pathname = usePathname();
 
   const currentCategoryName = searchParams.get("categoryName");
+  const popularity = searchParams.get("popularity");
 
   useEffect(() => {
     const url = qs.stringifyUrl({
@@ -24,6 +25,7 @@ export const SearchInput = () => {
       query: {
         categoryName: currentCategoryName,
         title: debouncedValue,
+        popularity: popularity
       }
     }, { skipEmptyString: true, skipNull: true });
 

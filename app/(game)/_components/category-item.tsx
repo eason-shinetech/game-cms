@@ -17,6 +17,7 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
   const pathname = usePathname();
   const categoryName = searchParams.get("categoryName") || "All";
   const title = searchParams.get("title");
+  const popularity = searchParams.get("popularity");
   const queryForCategory = (categoryName: string) => {
     const url = qs.stringifyUrl(
       {
@@ -24,6 +25,7 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
         query: {
           categoryName: categoryName === "All" ? "" : categoryName,
           title: title,
+          popularity: popularity
         },
       },
       { skipEmptyString: true, skipNull: true }

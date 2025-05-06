@@ -18,6 +18,7 @@ const GameList = () => {
   const searchParams = useSearchParams();
   const categoryName = searchParams.get("categoryName") || "";
   const title = searchParams.get("title") || "";
+  const popularity = searchParams.get("popularity") || "";
   const getGamesByPageChange = async (page: number) => {
     try {
       setIsLoading(true);
@@ -27,6 +28,9 @@ const GameList = () => {
       }
       if (title) {
         url += `&title=${title}`;
+      }
+      if (popularity) {
+        url += `&popularity=${popularity}`;
       }
       const res = await axios.get(url);
       const total = res.data.total;
@@ -44,7 +48,8 @@ const GameList = () => {
   useEffect(() => {
     setGames([]);
     setPage(0);
-  }, [categoryName, title]);
+    setHasMore(true);
+  }, [categoryName, title, popularity]);
 
   const onLoadMore = (page: number) => {
     setPage(page);
