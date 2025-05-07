@@ -5,25 +5,26 @@ import { useRouter } from "next/navigation";
 
 interface BannerItemProps {
   id: string;
+  titleUrl: string;
   bannerImage: string;
 }
 
-const BannerItem = ({ id, bannerImage }: BannerItemProps) => {
+const BannerItem = ({ id, titleUrl, bannerImage }: BannerItemProps) => {
   const router = useRouter();
-  const handleClick = (id: string) => {
-    router.push(`/${id}`);
+  const handleClick = (titleUrl: string) => {
+    router.push(`/${titleUrl}`);
   };
   return (
     <AspectRatio
-      ratio={128 / 55}
-      className="bg-muted rounded-md"
-      onClick={() => handleClick(id)}
+      ratio={512 / 384}
+      className="bg-muted rounded-md shadow-sm"
+      onClick={() => handleClick(titleUrl)}
     >
       <Image
         src={bannerImage}
         alt={id}
-        width={640}
-        height={275}
+        width={512}
+        height={384}
         className="h-full w-full rounded-md object-contain shadow-sm"
       />
     </AspectRatio>

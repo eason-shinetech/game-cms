@@ -5,6 +5,7 @@ import GameList from "./_components/game-list";
 import { Suspense } from "react";
 import MobileSearch from "./_components/mobile/mobile-search";
 import MobileBanner from "./_components/mobile/mobile-banner";
+import Popularity from "./_components/popularity";
 
 const GamePage = () => {
   return (
@@ -13,6 +14,9 @@ const GamePage = () => {
       <MobileBanner />
       {/* <AdBanner /> */}
       <MobileSearch />
+      <Suspense>
+        <Popularity />
+      </Suspense>
       <GameCategory />
       <Suspense>
         <GameList />

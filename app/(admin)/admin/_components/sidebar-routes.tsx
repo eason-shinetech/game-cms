@@ -33,8 +33,8 @@ const adminRoutes = [
   },
   {
     icon: Import,
-    label: "Game Import",
-    href: "/admin/game-import",
+    label: "Fetch Url",
+    href: "/admin/fetch-url",
   },
   {
     icon: PencilIcon,

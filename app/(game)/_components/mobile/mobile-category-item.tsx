@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { CategoryMapping } from "@/models/game-category";
+import { JoystickIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 
@@ -14,18 +15,20 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "";
   const title = searchParams.get("title");
+  const popularity = searchParams.get("popularity");
 
-  const isActive = categoryId === _id;
+  const isActive = categoryName === name;
 
-  const queryForCategory = (categoryId: string) => {
+  const queryForCategory = (categoryName: string) => {
     const url = qs.stringifyUrl(
       {
         url: pathname,
         query: {
-          categoryId: categoryId,
+          categoryName: categoryName,
           title: title,
+          popularity: popularity,
         },
       },
       { skipEmptyString: true, skipNull: true }
@@ -34,11 +37,11 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
     router.push(url);
   };
 
-  const Icon = CategoryMapping.find((item) => item.name === name)?.icon;
+  const Icon = CategoryMapping.find((item) => item.name === name)?.icon || JoystickIcon;
 
   return (
     <div
-      onClick={() => queryForCategory(_id)}
+      onClick={() => queryForCategory(name)}
       className={cn(
         "w-full h-full flex items-center gap-x-2 text-sky-500 text-sm font-[500] pl-4 transition-all shadow-sm hover:text-sky-500",
         isActive && "bg-sky-400/80 text-white hover:bg-sky-500 hover:text-white"

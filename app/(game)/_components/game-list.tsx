@@ -10,23 +10,27 @@ const GameList = () => {
   const [page, setPage] = useState(0);
   const pageSize = 24;
   const [games, setGames] = useState<
-    { _id: string; title: string; thumb: string }[]
+    { _id: string; title: string; titleUrl: string; thumb: string }[]
   >([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
   const searchParams = useSearchParams();
-  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "";
   const title = searchParams.get("title") || "";
+  const popularity = searchParams.get("popularity") || "";
   const getGamesByPageChange = async (page: number) => {
     try {
       setIsLoading(true);
       let url = `/api/game/search?page=${page}&pageSize=${pageSize}`;
-      if (categoryId) {
-        url += `&categoryId=${categoryId}`;
+      if (categoryName) {
+        url += `&categoryName=${categoryName}`;
       }
       if (title) {
         url += `&title=${title}`;
+      }
+      if (popularity) {
+        url += `&popularity=${popularity}`;
       }
       const res = await axios.get(url);
       const total = res.data.total;
@@ -41,11 +45,11 @@ const GameList = () => {
     }
   };
 
-
   useEffect(() => {
     setGames([]);
     setPage(0);
-  }, [categoryId, title]);
+    setHasMore(true);
+  }, [categoryName, title, popularity]);
 
   const onLoadMore = (page: number) => {
     setPage(page);

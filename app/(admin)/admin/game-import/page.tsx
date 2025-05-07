@@ -101,7 +101,7 @@ const GameImport = () => {
           images: item.Assets,
           width: item.Width,
           height: item.Height,
-          categorys: item.Genres,
+          categories: item.Genres,
           tags: item.Tags,
         };
       });

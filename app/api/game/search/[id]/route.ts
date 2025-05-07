@@ -9,7 +9,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       return new NextResponse("Game ID is required", { status: 400 });
     }
     await dbConnect();
-    const game = await GameModel.findById(id);
+    const game = await GameModel.findOne({ titleUrl: id});
     if (!game) {
       return new NextResponse("Game not found", { status: 404 });
     }

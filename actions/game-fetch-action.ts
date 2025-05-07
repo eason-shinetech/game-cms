@@ -1,3 +1,4 @@
+import { getTitleUrl } from "@/lib/utils";
 import { PropsCURDOmitted } from "@/models/base";
 import GameModel, { GameMonetizeResult, Game } from "@/models/game";
 import GameCategoryModel, { CategoryMapping } from "@/models/game-category";
@@ -12,7 +13,7 @@ export async function saveGameMonetizeGames(games: GameMonetizeResult[]) {
     const categorys = Array.from(
       new Set(games.map((game) => game.category)?.filter((c) => c))
     );
-    const dbCategorys = await handleCategorys(categorys);
+    await handleCategorys(categorys);
     // 再处理tags
     const tags = Array.from(
       new Set(
@@ -23,7 +24,11 @@ export async function saveGameMonetizeGames(games: GameMonetizeResult[]) {
       )
     );
     // 修改标签处理部分
-    const dbTags = await handleTags(tags);
+    await handleTags(tags);
+
+    const titles = games.map((game) => game.title.trim());
+    // 查找已存在的games
+    const existGames = await GameModel.find({ title: { $in: titles } });
 
     // 最后处理games
     const addGames: Omit<Game, PropsCURDOmitted>[] = games
@@ -33,36 +38,33 @@ export async function saveGameMonetizeGames(games: GameMonetizeResult[]) {
           m.categories.includes(game.category)
         );
         const categoryName = categoryMapping?.name || "Others";
-        const categoryIds =
-          dbCategorys
-            ?.filter((category) => category.name === categoryName)
-            .map((category) => category._id) || [];
-        if (categoryIds.length === 0) {
-          console.log(
-            "categoryIds is empty",
-            game.title,
-            game.category,
-            categoryMapping
-          );
+        const tags =
+          game.tags
+            ?.split(",")
+            ?.map((t) => t.trim())
+            ?.filter((t) => t) || [];
+        const existGame = existGames.find((g) => g.title === game.title.trim());
+        const platforms = existGame?.platforms || [];
+        if (!platforms.includes(game.platform)) {
+          platforms.push(game.platform);
         }
-        const tagIds =
-          dbTags
-            ?.filter((tag) => game.tags.includes(tag.name))
-            .map((tag) => tag._id) || [];
         return {
           gameId: game.id.trim(),
           title: game.title.trim(),
+          titleUrl: getTitleUrl(game.title.trim()),
           description: game.description?.trim(),
           instructions: game.instructions?.trim(),
           url: game.url.trim(),
           thumb: game.thumb.trim(),
+          bannerImage: game.thumb.trim(),
           width: game.width,
           height: game.height,
-          categoryIds,
-          tagIds,
+          categories: [categoryName],
+          tags: tags,
           lastUpdated: new Date(),
-          fetchFrom: "monetize",
-          images: [],
+          fetchFrom: game.from || "monetize",
+          platforms: platforms,
+          popularity: game.popularity,
         };
       });
     // 批量插入或更新games
@@ -111,7 +113,7 @@ export async function handleCategorys(categorys: string[]) {
         };
       })
     );
-    return await GameCategoryModel.find({ name: { $in: categoryMapping } });
+    // return await GameCategoryModel.find({ name: { $in: categoryMapping } });
   } catch (error) {
     console.error("saveCategorys error", error);
   }
@@ -134,7 +136,7 @@ export async function handleTags(tags: string[]) {
         };
       })
     );
-    return await GameTagModel.find({ name: { $in: tags } }); // 改为使用标签专用模型
+    // return await GameTagModel.find({ name: { $in: tags } }); // 改为使用标签专用模型
   } catch (error) {
     console.error("saveTags error", error);
   }

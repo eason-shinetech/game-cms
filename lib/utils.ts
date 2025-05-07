@@ -21,3 +21,11 @@ export const isValidMongoIds = (ids: string[]) => {
 export const convertToMongoId = (id: string | null | undefined) => {
   return id && isValidMongoId(id) ? (new mongoose.Types.ObjectId(id) as unknown as mongoose.Schema.Types.ObjectId) : null;
 };
+
+export const getTitleUrl = (title: string) => {
+  const reg = /[^a-zA-Z0-9]/g;
+  const noSymbolsTitle = title.toLowerCase().trimStart().trimEnd().split(reg).join('-');
+  const rule = /\s+/g;
+  const encodeTitle = noSymbolsTitle.split(rule).join('-').substring(0, 100);
+  return encodeTitle;
+}

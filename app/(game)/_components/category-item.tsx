@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CategoryMapping } from "@/models/game-category";
+import { JoystickIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 
@@ -15,15 +16,17 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const categoryId = searchParams.get("categoryId") || "";
+  const categoryName = searchParams.get("categoryName") || "All";
   const title = searchParams.get("title");
-  const queryForCategory = (categoryId: string) => {
+  const popularity = searchParams.get("popularity");
+  const queryForCategory = (categoryName: string) => {
     const url = qs.stringifyUrl(
       {
         url: pathname,
         query: {
-          categoryId: categoryId,
+          categoryName: categoryName === "All" ? "" : categoryName,
           title: title,
+          popularity: popularity
         },
       },
       { skipEmptyString: true, skipNull: true }
@@ -31,15 +34,15 @@ const CategoryItem = ({ _id, name }: CategoryItemProps) => {
 
     router.push(url);
   };
-  const Icon = CategoryMapping.find((item) => item.name === name)?.icon;
+  const Icon = CategoryMapping.find((item) => item.name === name)?.icon || JoystickIcon;
 
   return (
     <Button
-      onClick={() => queryForCategory(_id)}
+      onClick={() => queryForCategory(name)}
       variant={`outline`}
       className={cn(
         "text-xs text-sky-700 hover:text-sky-700 rounded-2xl cursor-pointer",
-        categoryId === _id &&
+        categoryName === name &&
           "bg-sky-500 text-white hover:bg-sky-700 hover:text-white"
       )}
     >

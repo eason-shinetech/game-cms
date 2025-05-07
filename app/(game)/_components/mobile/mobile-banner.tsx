@@ -15,9 +15,9 @@ import { Loader2 } from "lucide-react";
 
 const MobileBanner = () => {
   const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
-  const [banners, setBanners] = useState<{ id: string; bannerImage: string }[]>(
-    []
-  );
+  const [banners, setBanners] = useState<
+    { id: string; titleUrl: string; bannerImage: string }[]
+  >([]);
   const [isLoading, setIsLoading] = useState(false);
   const getBanners = async () => {
     try {
@@ -27,7 +27,7 @@ const MobileBanner = () => {
       setBanners(data?.banners || []);
     } catch (error) {
       console.error("Error fetching banners:", error);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -37,7 +37,7 @@ const MobileBanner = () => {
   }, []);
 
   return (
-    <div className="w-full md:hidden mt-4 cursor-pointer">
+    <div className="w-full md:hidden mt-4 cursor-pointer p-2">
       {isLoading && (
         <div className="w-full h-[140px] flex items-center justify-center">
           <Loader2 className="w-4 h-4 animate-spin" />
@@ -56,6 +56,7 @@ const MobileBanner = () => {
               <BannerItem
                 key={banner.id.toString()}
                 id={banner.id.toString()}
+                titleUrl={banner.titleUrl}
                 bannerImage={banner.bannerImage}
               />
             </CarouselItem>
