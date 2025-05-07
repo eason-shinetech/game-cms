@@ -54,7 +54,7 @@ const PopularityItem = ({ name, value, img }: PopularityItemProps) => {
         style={{ backgroundImage: `url('${img}')` }}
         className="absolute xl:hidden w-full h-full bg-no-repeat opacity-20 bg-center bg-contain"
       ></div>
-      {name}
+      <div className="flex-1">{name}</div>
     </Button>
   );
 };

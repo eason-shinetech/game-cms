@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import GameItem from "../_components/game-item";
 import dayjs from "dayjs";
 import { Loader2 } from "lucide-react";
+import HistoryTitle from "./_components/history-title";
 
 const HistoryPage = () => {
   const visitor = useGameVistorStore((state: any) => state.visitor);
@@ -76,11 +77,8 @@ const HistoryPage = () => {
       {histories.length > 0 && (
         <>
           {todayHistories.length > 0 && (
-            <div className="w-full flex flex-col justify-between">
-              <span className="text-2xl text-slate-600 font-semibold">
-                Today
-              </span>
-              <hr className="border border-slate-300 my-2" />
+            <div className="w-full flex flex-col justify-between gap-4">
+              <HistoryTitle title="Today" />
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
                 {todayHistories.map((history) => (
                   <GameItem
@@ -95,11 +93,8 @@ const HistoryPage = () => {
             </div>
           )}
           {yesterdayHistories.length > 0 && (
-            <div className="w-full flex flex-col justify-between">
-              <span className="text-2xl text-slate-600 font-semibold">
-                Yesterday
-              </span>
-              <hr className="border border-slate-300 my-2" />
+            <div className="w-full flex flex-col justify-between gap-4">
+              <HistoryTitle title="Yesterday" />
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
                 {yesterdayHistories.map((history) => (
                   <GameItem
@@ -114,11 +109,8 @@ const HistoryPage = () => {
             </div>
           )}
           {oldHistories.length > 0 && (
-            <div className="w-full flex flex-col justify-between">
-              <span className="text-2xl text-slate-600 font-semibold">
-                History
-              </span>
-              <hr className="border border-slate-300 my-2" />
+            <div className="w-full flex flex-col justify-between gap-4">
+              <HistoryTitle title="History" />
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 p-4 gap-4 space-y-4 h-full overflow-y-auto">
                 {oldHistories.map((history) => (
                   <GameItem
