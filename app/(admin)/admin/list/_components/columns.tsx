@@ -13,6 +13,7 @@ import axios from "axios";
 import { ArrowUpDown, EyeIcon, FlagIcon, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { Checkbox } from "@/components/ui/checkbox"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -30,6 +31,29 @@ export type GameList = {
 
 // 修改 columns 定义，接收 onRefresh 参数
 export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
+  {
+    id: "select",
+    size: 50,
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "thumb",
     header: () => "Thumb",
@@ -76,7 +100,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
   {
     accessorKey: "isSetBanner",
     header: () => "Banner",
-    size: 50,
+    size: 100,
     cell: ({ row }) => {
       const isSetBanner = Boolean(row.getValue("isSetBanner"));
       return (
@@ -102,27 +126,27 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
       ));
     },
   },
-  {
-    accessorKey: "tags",
-    header: () => "Tag",
-    size: 300,
-    cell: ({ row }) => {
-      const tags = row.getValue("tags") as string[];
+  // {
+  //   accessorKey: "tags",
+  //   header: () => "Tag",
+  //   size: 300,
+  //   cell: ({ row }) => {
+  //     const tags = row.getValue("tags") as string[];
 
-      return (
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <span
-              key={tag}
-              className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-      );
-    },
-  },
+  //     return (
+  //       <div className="flex flex-wrap gap-2">
+  //         {tags.map((tag) => (
+  //           <span
+  //             key={tag}
+  //             className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300"
+  //           >
+  //             {tag}
+  //           </span>
+  //         ))}
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     accessorKey: "from",
     size: 120,

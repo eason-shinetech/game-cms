@@ -23,18 +23,35 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   sortChanged?: (sorting: ColumnSort) => void;
+  onRowSelectionChange?: (selectedIds: string[]) => void; // 新增回调属性
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   sortChanged,
+  onRowSelectionChange, // 新增props
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState({})
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    onRowSelectionChange: (updater) => {
+      const newSelection = typeof updater === "function" 
+        ? updater(rowSelection)
+        : updater;
+      setRowSelection(newSelection);
+      
+      // 触发外部回调，传递选中行的_id
+      if (onRowSelectionChange) {
+        const selectedIds = Object.keys(newSelection)
+          .filter(key => newSelection[key])
+          .map(key => (table.getRow(key).original as any)?._id); // 假设数据行有_id字段
+        onRowSelectionChange(selectedIds.filter(Boolean) as string[]);
+      }
+    },
     onSortingChange: (updater) => {
       // 正确处理 Updater 类型（可能为函数或值）
       const newSorting =
@@ -52,6 +69,7 @@ export function DataTable<TData, TValue>({
     manualSorting: true,
     state: {
       sorting,
+      rowSelection,
     },
   });
 
