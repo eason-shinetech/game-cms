@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { CategoryMapping } from "@/models/game-category";
+import { JoystickIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import qs from "query-string";
 
@@ -36,7 +37,7 @@ const GameMobileCategoryItem = ({ _id, name }: CategoryItemProps) => {
     router.push(url);
   };
 
-  const Icon = CategoryMapping.find((item) => item.name === name)?.icon;
+  const Icon = CategoryMapping.find((item) => item.name === name)?.icon || JoystickIcon;
 
   return (
     <div
