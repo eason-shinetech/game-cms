@@ -13,8 +13,9 @@ export async function POST(
     if (!game) {
       return new NextResponse("Game not found", { status: 404 });
     }
-    game.clicks += 20;
-    await game.save();
+    const result = await GameModel.findByIdAndUpdate(id, {
+      $inc: { clickCount: 20 },
+    });
     return new NextResponse("Game clicked successfully", { status: 200 });
   } catch (error) {
     console.log("[Click Game]: ", error);

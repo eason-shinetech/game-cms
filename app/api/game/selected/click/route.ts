@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     }
     await GameModel.updateMany(
       { _id: { $in: ids } },
-      { $inc: { clicks: 20 } }
+      { $inc: { clickCount: 20 } }
     )
     return new NextResponse("OK", { status: 200 });
   } catch (error) {

@@ -186,10 +186,6 @@ const ListPage = () => {
     setPage(1);
   }, [keyword]);
 
-  useEffect(() => {
-    console.log("selectedIds", selectedIds);
-  }, [selectedIds]);
-
   //#region Actions
   const publishSelected = async () => {
     try {
