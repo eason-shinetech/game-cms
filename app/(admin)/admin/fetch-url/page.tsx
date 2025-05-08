@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SelectTrigger } from "@/components/ui/select";
+import dayjs from "dayjs";
+import { CategoryMapping } from "@/models/game-category";
 
 const FetchUrlPage = () => {
   const [from, setFrom] = useState("monetize");
@@ -35,32 +37,131 @@ const FetchUrlPage = () => {
   const pageSize = 10;
   const timer = useRef<NodeJS.Timeout>(null);
 
+  const fetchTimer = useRef<NodeJS.Timeout>(null);
+
+  //循环获取数据
   const fetchData = async () => {
     if (!url || !from) {
       toast.error("Please enter a url and from!");
       return;
     }
     try {
-      setIsHandling(true);
-      const res = await axios.get(url);
-      const data = res.data;
-      if (data.length === 0) {
-        toast.error("No data found");
-        return;
-      }
-      setData(data);
-      toast.success("Fetch data successfully");
+      await fetchFromUrl(1, [], from === "gamepix" ? 1000 : 15000);
     } catch (error) {
       console.error(error);
       toast.error("Fetch data failed");
-    } finally {
-      setIsHandling(false);
+    }
+  };
+
+  const fetchFromUrl = async (page: number, games: any[], time: number) => {
+    try {
+      setIsHandling(true);
+      const fetchUrl = `${url}&page=${page}`;
+      const res = await axios.get(fetchUrl);
+      const fetchData = res.data;
+      console.log("fetchFromUrl:", time, fetchUrl, games.length);
+      if (fetchData.length === 0) {
+        setIsHandling(false);
+        if (fetchTimer.current) {
+          clearTimeout(fetchTimer.current);
+        }
+        if (games.length > 0) {
+          setData(games);
+        }
+      }
+      //如果是monetize，直接返回数据
+      let currentGames = fetchData;
+      if (from === "gamepix") {
+        const items = fetchData.items;
+        currentGames = convertData(items);
+      }
+      games.push(...currentGames);
+
+      fetchTimer.current = setTimeout(async () => {
+        await fetchFromUrl(page + 1, games, time);
+      }, time);
+    } catch (error: any) {
+      if (
+        error?.response?.data?.message === "Page number request out of bound"
+      ) {
+        setIsHandling(false);
+        if (fetchTimer.current) {
+          clearTimeout(fetchTimer.current);
+        }
+        if (games.length > 0) {
+          const uniqueGames = games.filter(
+            (game, index, self) =>
+              index === self.findIndex((g) => g.title === game.title)
+          );
+          console.log("uniqueGames:", games.length, uniqueGames.length);
+          setData(uniqueGames);
+        }
+      } else {
+        console.error(error);
+        toast.error("Fetch data failed");
+        setIsHandling(false);
+        if (fetchTimer.current) {
+          clearTimeout(fetchTimer.current);
+        }
+      }
     }
   };
 
   const onLoadMore = (page: number) => {
     setCurrentPage(page);
     getPageData(page);
+  };
+
+  const convertData = (data: any[]) => {
+    if (data.length === 0 || from === "monetize") return data;
+    const newData = data.map((item: any) => {
+      const image = item?.image;
+      const banner = item?.banner_image;
+      return {
+        ...item,
+        title: item?.title,
+        // titleUrl: item?.namespace,
+        description: item?.description,
+        thumb: image,
+        bannerImage: banner,
+        category: getCategory(item),
+        tags: "",
+        platform: "mobile",
+        popularity: getPopularity(item),
+        from: "gamepix",
+      };
+    });
+    return newData;
+  };
+
+  const getPopularity = (item: any) => {
+    if (from === "monetize") {
+      return item?.popularity;
+    }
+    if (dayjs(item.date_modified).year() === dayjs().year()) {
+      return "newest";
+    }
+    if (
+      item.quality_score > 0.8 &&
+      dayjs().year() - dayjs(item.date_modified).year() <= 1
+    ) {
+      return "hotgames";
+    }
+    if (item.quality_score > 0.9) {
+      return "bestgames";
+    }
+    return "";
+  };
+
+  const getCategory = (item: any) => {
+    if (from === "monetize") {
+      return item?.category;
+    }
+    const category = item?.category;
+    const current = CategoryMapping.find((item) =>
+      item.categories.some((c) => c.toLowerCase() === category.toLowerCase())
+    );
+    return current?.name || "Hypercasual";
   };
 
   const getPageData = (page: number) => {
@@ -104,7 +205,7 @@ const FetchUrlPage = () => {
   const saveData = async (index: number) => {
     try {
       setIsHandling(true);
-      const size = 500;
+      const size = 3000;
       const start = index * size;
       const end =
         (index + 1) * size > data.length ? data.length : (index + 1) * size;
@@ -120,13 +221,13 @@ const FetchUrlPage = () => {
         setProgress(0);
         return;
       }
-      items.forEach((game) => {
+      items.forEach((game: any) => {
         game.platform = platform;
-        game.popularity = '';
+        game.popularity = game.popularity || "";
         game.from = from;
       });
 
-      await axios.post("/api/game/fetch", items);
+      await axios.post("/api/game/fetch-url", items);
       //Go on
       const progress = (end / data.length) * 100;
       setProgress(progress);
@@ -146,25 +247,41 @@ const FetchUrlPage = () => {
   return (
     <div className="flex flex-col p-10 gap-6">
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="url">Url</Label>
+        <Label htmlFor="url">
+          Url{" "}
+          <span className="text-xs text-red-400/80">
+            (* page作为参数自动添加)
+          </span>
+        </Label>
         <span className="text-xs text-slate-400">
-          https://gamemonetize.com/feed.php?format=0&page=1
+          https://gamemonetize.com/feed.php?format=0
+          <br />
+          https://feeds.gamepix.com/v2/json?sid=45F4Y&pagination=96
         </span>
         <Input
           type="url"
           id="url"
           placeholder="Enter a url"
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(e: any) => {
+            const url = e.target.value;
+            setUrl(url);
+            if (url.indexOf("gamepix") > -1) {
+              setFrom("gamepix");
+            } else if (url.indexOf("gamemonetize") > -1) {
+              setFrom("monetize");
+            }
+          }}
         />
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="from">From</Label>
+        <span className="text-xs text-slate-400">monetize / gamepix</span>
         <Input
           type="from"
           id="from"
           value={from}
           placeholder="monetize"
-          onChange={(e) => setFrom(e.target.value)}
+          disabled
         />
       </div>
       <div className="grid w-full max-w-sm items-center gap-1.5">

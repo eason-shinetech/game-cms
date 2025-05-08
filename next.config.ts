@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { hostname: "**.gamemonetize.com", protocol: "https" },
       { hostname: "**.gamedistribution.com", protocol: "https" },
+      { hostname: "**.gamepix.com", protocol: "https" },
       // 新增以下域名配置
       { hostname: "**.funnyplayers.com", protocol: "https" }
     ],
