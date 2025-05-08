@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,6 +34,11 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState({})
+
+  useEffect(() => {
+    table.resetRowSelection();
+  }, [data]);
+  
   const table = useReactTable({
     data,
     columns,
