@@ -64,7 +64,7 @@ const GameItem = ({ _id, title, titleUrl, thumb }: GameItemProps) => {
       />
       {hoverId === _id && (
         <div
-          className="absolute w-full bottom-0 left-0 text-xs p-2 text-slate-100 bg-gray-400 truncate"
+          className="text-xs md:text-sm absolute w-full bottom-0 left-0 p-2 text-slate-100 bg-gray-400 truncate"
           title={title}
         >
           {title}
