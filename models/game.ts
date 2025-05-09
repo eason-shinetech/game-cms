@@ -36,6 +36,7 @@ export interface GameMonetizeResult {
 export interface Game extends BaseModel {
   gameId?: string;
   title: string;
+  titleUrl: string;
   description: string;
   instructions: string;
   url: string;
