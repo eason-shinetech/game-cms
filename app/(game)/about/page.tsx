@@ -29,8 +29,7 @@ const AountPage = () => {
       <p>
         Meanwhile, our customer support team stands ready 24/7, eager to address
         any queries or concerns, guaranteeing a smooth and enjoyable gaming
-        experience for everyone. Together, we're committed to making [Website
-        Name] the go - to destination for HTML5 gaming.
+        experience for everyone. Together, we're committed to making [Funny Games] the go - to destination for HTML5 gaming.
       </p>
       <h3 className="text-md font-semibold">Our Philosophy</h3>
       <p>

@@ -21,27 +21,41 @@ const TermsPage = () => {
           challenges. Examples include platformers and shooters.
         </li>
         <li>
+          <strong>Arcade Games: </strong>Classic arcade-style games with simple
+          gameplay. Often narrative-driven.
+        </li>
+        <li>
           <strong>Adventure Games: </strong>Emphasize exploration and
           puzzle-solving. Often narrative-driven.
         </li>
         <li>
-          <strong>Strategy Games: </strong>Require tactical and strategic
-          thinking. Includes real-time strategy (RTS) and turn-based strategy
-          (TBS).
+          <strong>Shooting Games: </strong> Games that involve shooting and
+          combat. Examples include first-person shooters and third-person
+          shooters.
         </li>
         <li>
-          <strong>Sports Games: </strong>Replicate real-world sports. Examples
-          include FIFA, NBA 2K.
+          <strong>Multiplayer Games: </strong> Games that involve multiple
+          players. Examples include online multiplayer games and local
+          multiplayer games.
+        </li>
+        <li>
+          <strong>Puzzle Games: </strong>Challenge problem-solving skills, such
+          as Tetris or Candy Crush.
         </li>
         <li>
           <strong>Racing Games: </strong>Focus on vehicle racing, from realistic
           simulators to arcade-style games.
         </li>
         <li>
-          <strong>Puzzle Games: </strong>Challenge problem-solving skills, such
-          as Tetris or Candy Crush.
+          <strong>Sports Games: </strong>Replicate real-world sports. Examples
+          include FIFA, NBA 2K.
+        </li>
+        <li>
+          <strong>Hypercasual Games: </strong>Lightweight games with minimal
+          rules and fast-paced gameplay.
         </li>
       </ul>
+      <p>And so on.</p>
     </div>
   );
 };
