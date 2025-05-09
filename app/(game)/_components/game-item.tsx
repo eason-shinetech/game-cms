@@ -3,7 +3,7 @@
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 
 interface GameItemProps {
@@ -16,6 +16,8 @@ interface GameItemProps {
 const GameItem = ({ _id, title, titleUrl, thumb }: GameItemProps) => {
   const [hoverId, setHoverId] = useState<string | null>(null);
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const imageRef = useRef<HTMLImageElement>(null);
 
   const onClick = async (titleUrl: string) => {
     try {
@@ -36,12 +38,29 @@ const GameItem = ({ _id, title, titleUrl, thumb }: GameItemProps) => {
       onTouchEnd={() => setHoverId(null)}
       onClick={() => onClick(titleUrl)}
     >
+      {/* 加载动画 */}
+      {isLoading && (
+        <img
+          src="/loading.gif"
+          alt="loading"
+          className="absolute z-10 w-12 h-12"
+          style={{ display: isLoading ? "block" : "none" }}
+        />
+      )}
+
       <Image
+        ref={imageRef}
         src={thumb}
         alt={title}
         width={512}
         height={384}
-        priority={true} //预加载
+        priority={true}
+        quality={50}
+        onLoad={() => setIsLoading(false)}
+        onError={() => setIsLoading(false)}
+        className={`transition-opacity duration-300 ${
+          isLoading ? "opacity-0" : "opacity-100"
+        }`}
       />
       {hoverId === _id && (
         <div
