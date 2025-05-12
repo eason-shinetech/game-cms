@@ -1,41 +1,26 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { ColumnDef } from "@tanstack/react-table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { GameList } from "@/data/game-schema";
+import { DataTableColumnHeader } from "./data-table-column-header";
+import { CircleCheckIcon, FlagIcon, MoreHorizontal } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
-import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { ArrowUpDown, EyeIcon, FlagIcon, MoreHorizontal } from "lucide-react";
-import Image from "next/image";
 import toast from "react-hot-toast";
-import { Checkbox } from "@/components/ui/checkbox";
+import Image from "next/image";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
-export type GameList = {
-  _id: string;
-  thumb: string;
-  title: string;
-  categories: string[];
-  tags: string[];
-  from: string;
-  status: "draft" | "published";
-  bannerImage?: string;
-  isSetBanner: boolean;
-  clickCount: number;
-  Popularity: string;
-};
-
-// 修改 columns 定义，接收 onRefresh 参数
 export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
   {
     id: "select",
-    size: 20,
+    size: 30,
     header: ({ table }) => (
       <Checkbox
         checked={
@@ -44,6 +29,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
+        className="translate-y-[2px]"
       />
     ),
     cell: ({ row }) => (
@@ -51,6 +37,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
+        className="translate-y-[2px]"
       />
     ),
     enableSorting: false,
@@ -58,8 +45,10 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
   },
   {
     accessorKey: "thumb",
-    header: () => "Thumb",
     size: 100,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Thumb" />
+    ),
     cell: ({ row }) => {
       const img = String(row.getValue("thumb"));
       return (
@@ -75,33 +64,30 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
         </div>
       );
     },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "title",
     header: ({ column }) => (
-      <div>
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Title
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <DataTableColumnHeader column={column} title="Title" />
     ),
     cell: ({ row }) => {
       const title = row.getValue("title") as string;
       return (
-        <div className="font-semibold break-words whitespace-pre-wrap">
-          {title}
+        <div className="flex space-x-2" title={title}>
+          <span className="truncate font-medium">{title}</span>
         </div>
       );
     },
+    enableHiding: false,
   },
   {
     accessorKey: "isSetBanner",
-    header: () => "Banner",
-    size: 100,
+    size: 50,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Banner" />
+    ),
     cell: ({ row }) => {
       const isSetBanner = Boolean(row.getValue("isSetBanner"));
       return (
@@ -110,11 +96,15 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
         </div>
       );
     },
+    enableHiding: false,
+    enableSorting: false,
   },
   {
     accessorKey: "categories",
-    header: () => "Category",
-    size: 160,
+    size: 80,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
     cell: ({ row }) => {
       const categories = row.getValue("categories") as string[];
       return categories.map((category) => (
@@ -126,87 +116,61 @@ export const getColumns = (onRefresh: () => void): ColumnDef<GameList>[] => [
         </span>
       ));
     },
+    enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "clickCount",
     size: 80,
     header: ({ column }) => (
-      <div>
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Clicks
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <DataTableColumnHeader column={column} title="Clicks" />
     ),
     cell: ({ row }) => {
       const clickCount = row.getValue("clickCount") as string;
       return (
-        <div className="text-center break-words whitespace-pre-wrap">
-          {clickCount}
-        </div>
+        <div className="break-words whitespace-pre-wrap">{clickCount}</div>
       );
     },
+    enableHiding: false,
   },
   {
     accessorKey: "popularity",
-    size: 100,
+    size: 80,
     header: ({ column }) => (
-      <div>
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Popularity
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <DataTableColumnHeader column={column} title="Popularity" />
     ),
+    enableHiding: false,
   },
   {
     accessorKey: "from",
-    size: 120,
+    size: 80,
     header: ({ column }) => (
-      <div>
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          From
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <DataTableColumnHeader column={column} title="From" />
     ),
+    enableHiding: false,
   },
   {
     accessorKey: "status",
     size: 100,
     header: ({ column }) => (
-      <div>
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Status
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <DataTableColumnHeader column={column} title="Status" />
     ),
     cell: ({ row }) => {
       const status = row.getValue("status") as "draft" | "published";
       return (
-        <span
-          className={cn(
-            `px-2 py-1 text-xs rounded bg-slate-200 text-slate-800`,
-            status === "published" && "font-semibold bg-emerald-200"
-          )}
-        >
-          {status === "draft" ? "Draft" : "Published"}
-        </span>
+        <div className="flex items-center">
+          <CircleCheckIcon
+            className={cn(
+              "mr-2 h-4 w-4 text-muted-foreground",
+              status === "published" && "text-green-500"
+            )}
+          />
+          <span>{status}</span>
+        </div>
       );
     },
+    enableHiding: false,
+    enableSorting: false,
   },
   {
     id: "actions",

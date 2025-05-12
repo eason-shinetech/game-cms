@@ -1,9 +1,13 @@
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Logo() {
+export default function Logo({
+  className,
+  ...props
+}: React.ComponentProps<"a">) {
   return (
-    <Link href={'/'}>
+    <Link href={"/"} className={cn("", className)} {...props}>
       <Image
         src="/logo.svg"
         priority={true}
