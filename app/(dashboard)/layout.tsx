@@ -9,7 +9,7 @@ import { SessionProvider } from "next-auth/react";
 import ToasterProvider from "@/components/providers/toaster-provider";
 import { ThemeSwitch } from "@/components/commons/theme-switch";
 import { Header } from "@/components/layout/header";
-import { ProfileDropdown } from "./new-admin/_components/profile-dropdown";
+import { ProfileDropdown } from "./admin/_components/profile-dropdown";
 
 const inter = Inter({ subsets: ["latin"] });
 

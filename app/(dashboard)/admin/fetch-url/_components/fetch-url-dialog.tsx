@@ -22,12 +22,12 @@ import {
 import { Loader2Icon, SearchIcon } from "lucide-react";
 import { useState } from "react";
 
-interface FetchDialogProps {
+interface FetchUrlDialogProps {
   isFetching: boolean;
   onFetch: (url: string, from: string, platform: string) => void;
 }
 
-const FetchDialog = ({ isFetching, onFetch }: FetchDialogProps) => {
+const FetchUrlDialog = ({ isFetching, onFetch }: FetchUrlDialogProps) => {
   const [from, setFrom] = useState("monetize");
   const [platform, setPlatform] = useState("mobile");
   const [url, setUrl] = useState("https://gamemonetize.com/feed.php?format=0");
@@ -112,4 +112,4 @@ const FetchDialog = ({ isFetching, onFetch }: FetchDialogProps) => {
   );
 };
 
-export default FetchDialog;
+export default FetchUrlDialog;

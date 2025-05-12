@@ -21,7 +21,7 @@ import { CategoryMapping } from "@/models/game-category";
 import GameList from "../_components/game-list";
 import { Main } from "../_components/main";
 import { HeaderContainer } from "../_components/header-container";
-import FetchHeader from "./_components/fetch-header";
+import FetchUrlHeader from "./_components/fetch-url-header";
 
 const FetchUrlPage = () => {
   const [from, setFrom] = useState("monetize");
@@ -268,7 +268,7 @@ const FetchUrlPage = () => {
   return (
     <Main fixed>
       <HeaderContainer>
-        <FetchHeader
+        <FetchUrlHeader
           isFetching={isFetching}
           onFetch={(url, from, platform) => {
             setUrl(url);

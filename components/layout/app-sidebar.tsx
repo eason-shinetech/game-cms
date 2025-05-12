@@ -27,7 +27,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       items: [
         {
           title: "Dashboard",
-          url: "/new-admin",
+          url: "/admin",
           icon: AirplayIcon,
         },
         {
@@ -36,29 +36,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           items: [
             {
               title: "List",
-              url: "/new-admin/game-list",
+              url: "/admin/game-list",
               icon: ListIcon,
             },
             {
               title: "Fetch",
-              url: "/new-admin/game-fetch",
+              url: "/admin/game-fetch",
               icon: BetweenHorizonalEndIcon,
             },
             {
               title: "Fetch URL",
-              url: "/new-admin/fetch-url",
+              url: "/admin/fetch-url",
               icon: SearchIcon,
             },
           ],
         },
         {
           title: "Category",
-          url: "/new-admin/category",
+          url: "/admin/category",
           icon: BookMarkedIcon,
         },
         {
           title: "Users",
-          url: "/new-admin/users",
+          url: "/admin/users",
           icon: Users2Icon,
         },
       ],

@@ -2,17 +2,17 @@
 
 import { Button } from "@/components/ui/button";
 import { ImportIcon, Loader2Icon, SearchIcon } from "lucide-react";
-import FetchDialog from "./fetch-dialog";
+import GameFetchDialog from "./game-fetch-dialog";
 
 interface FetchHeaderProps {
   isFetching: boolean;
-  onFetch: (url: string, from: string, platform: string) => void;
+  onFetch: (type: string, popularity: string) => void;
   isImportDisabled: boolean;
   isImporting: boolean;
   onImport: () => void;
 }
 
-const FetchHeader = ({
+const GameFetchHeader = ({
   isFetching,
   onFetch,
   isImportDisabled,
@@ -22,13 +22,13 @@ const FetchHeader = ({
   return (
     <>
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Fetch From URL</h2>
+        <h2 className="text-2xl font-bold tracking-tight">Fetch From GameMonetize</h2>
         <p className="text-muted-foreground">
-          Here&apos;s a list of your tasks for this month!
+          Fetch games from GameMonetize here. Click 'Start Fetch' when you're done.
         </p>
       </div>
       <div className="flex gap-2">
-        <FetchDialog isFetching={isFetching} onFetch={onFetch} />
+        <GameFetchDialog isFetching={isFetching} onFetch={onFetch} />
         <Button
           className="space-x-1"
           onClick={onImport}
@@ -46,4 +46,4 @@ const FetchHeader = ({
   );
 };
 
-export default FetchHeader;
+export default GameFetchHeader;
