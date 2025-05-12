@@ -272,12 +272,9 @@ const ListPage = () => {
       <HeaderContainer>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Games</h2>
-          <p className="text-muted-foreground">
-            Here&apos;s a list of your games!
-          </p>
         </div>
       </HeaderContainer>
-      <div className="flex items-center gap-x-4 my-4">
+      <div className="w-full flex items-center gap-4 my-4 flex-wrap">
         <SearchInput setKeyword={setKeyword} />
         {/* Filter by status */}
         <DataTableFacetedFilter

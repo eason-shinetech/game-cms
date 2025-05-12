@@ -30,7 +30,7 @@ const GameItem = ({ _id, title, titleUrl, thumb }: GameItemProps) => {
   };
   return (
     <div
-      className="relative h-fit flex items-center justify-center cursor-pointer shadow-sm"
+      className="relative h-fit flex items-center justify-center cursor-pointer shadow-sm hover:shadow-xl transition-shadow duration-300"
       onMouseEnter={() => setHoverId(_id)}
       onTouchStart={() => setHoverId(_id)}
       onMouseLeave={() => setHoverId(null)}

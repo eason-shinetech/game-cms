@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useRef, useState } from "react";
-import GameList from "../game-import/_components/game-list";
+
 import { Progress } from "@/components/ui/progress";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
@@ -18,6 +18,10 @@ import {
 import { SelectTrigger } from "@/components/ui/select";
 import dayjs from "dayjs";
 import { CategoryMapping } from "@/models/game-category";
+import GameList from "../_components/game-list";
+import { Main } from "../_components/main";
+import { HeaderContainer } from "../_components/header-container";
+import FetchHeader from "./_components/fetch-header";
 
 const FetchUrlPage = () => {
   const [from, setFrom] = useState("monetize");
@@ -32,7 +36,8 @@ const FetchUrlPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isHandling, setIsHandling] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isImporting, setImporting] = useState(false);
   //一次处理20条数据
   const pageSize = 10;
   const timer = useRef<NodeJS.Timeout>(null);
@@ -46,7 +51,8 @@ const FetchUrlPage = () => {
       return;
     }
     try {
-      await fetchFromUrl(1, [], from === "gamepix" ? 1000 : 15000);
+      setData([]);
+      await fetchFromUrl(1, [], from === "gamepix" ? 1000 : 13000);
     } catch (error) {
       console.error(error);
       toast.error("Fetch data failed");
@@ -55,19 +61,28 @@ const FetchUrlPage = () => {
 
   const fetchFromUrl = async (page: number, games: any[], time: number) => {
     try {
-      setIsHandling(true);
+      setIsFetching(true);
       const fetchUrl = `${url}&page=${page}`;
       const res = await axios.get(fetchUrl);
       const fetchData = res.data;
-      console.log("fetchFromUrl:", time, fetchUrl, games.length);
+      console.log(
+        "fetchFromUrl:",
+        time,
+        fetchUrl,
+        fetchData.length,
+        games.length
+      );
       if (fetchData.length === 0) {
-        setIsHandling(false);
+        setIsFetching(false);
         if (fetchTimer.current) {
+          console.log('clearTimeout fetchTimer')
           clearTimeout(fetchTimer.current);
+          fetchTimer.current = null;
         }
         if (games.length > 0) {
           setData(games);
         }
+        return;
       }
       //如果是monetize，直接返回数据
       let currentGames = fetchData;
@@ -76,7 +91,9 @@ const FetchUrlPage = () => {
         currentGames = convertData(items);
       }
       games.push(...currentGames);
-
+      if(!fetchTimer.current){
+        
+      }
       fetchTimer.current = setTimeout(async () => {
         await fetchFromUrl(page + 1, games, time);
       }, time);
@@ -84,9 +101,10 @@ const FetchUrlPage = () => {
       if (
         error?.response?.data?.message === "Page number request out of bound"
       ) {
-        setIsHandling(false);
+        setIsFetching(false);
         if (fetchTimer.current) {
           clearTimeout(fetchTimer.current);
+          fetchTimer.current = null;
         }
         if (games.length > 0) {
           const uniqueGames = games.filter(
@@ -99,9 +117,10 @@ const FetchUrlPage = () => {
       } else {
         console.error(error);
         toast.error("Fetch data failed");
-        setIsHandling(false);
+        setIsFetching(false);
         if (fetchTimer.current) {
           clearTimeout(fetchTimer.current);
+          fetchTimer.current = null;
         }
       }
     }
@@ -204,20 +223,20 @@ const FetchUrlPage = () => {
 
   const saveData = async (index: number) => {
     try {
-      setIsHandling(true);
+      setImporting(true);
       const size = 3000;
       const start = index * size;
       const end =
         (index + 1) * size > data.length ? data.length : (index + 1) * size;
       const items = data.slice(start, end);
       if (items.length === 0) {
-        setIsHandling(false);
+        setImporting(false);
         if (timer.current) {
           clearTimeout(timer.current);
+          timer.current = null;
         }
         console.log("import data successfully", index);
         toast.success("Import data successfully");
-        setData([]);
         setProgress(0);
         return;
       }
@@ -236,8 +255,10 @@ const FetchUrlPage = () => {
         await saveData(index + 1);
       }, 200);
     } catch (error) {
+      setImporting(false);
       if (timer.current) {
         clearTimeout(timer.current);
+        timer.current = null;
       }
       console.error("Error saving data:", error);
       toast.error("Something went wrong");
@@ -245,93 +266,38 @@ const FetchUrlPage = () => {
   };
 
   return (
-    <div className="flex flex-col p-10 gap-6">
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="url">
-          Url{" "}
-          <span className="text-xs text-red-400/80">
-            (* page作为参数自动添加)
-          </span>
-        </Label>
-        <span className="text-xs text-slate-400">
-          https://gamemonetize.com/feed.php?format=0
-          <br />
-          https://feeds.gamepix.com/v2/json?sid=45F4Y&pagination=96
-        </span>
-        <Input
-          type="url"
-          id="url"
-          placeholder="Enter a url"
-          onChange={(e: any) => {
-            const url = e.target.value;
+    <Main fixed>
+      <HeaderContainer>
+        <FetchHeader
+          isFetching={isFetching}
+          onFetch={(url, from, platform) => {
             setUrl(url);
-            if (url.indexOf("gamepix") > -1) {
-              setFrom("gamepix");
-            } else if (url.indexOf("gamemonetize") > -1) {
-              setFrom("monetize");
-            }
+            setFrom(from);
+            setPlatform(platform);
+            fetchData();
           }}
+          isImportDisabled={data.length === 0 || isImporting}
+          isImporting={isImporting}
+          onImport={importData}
         />
-      </div>
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="from">From</Label>
-        <span className="text-xs text-slate-400">monetize / gamepix</span>
-        <Input
-          type="from"
-          id="from"
-          value={from}
-          placeholder="monetize"
-          disabled
-        />
-      </div>
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="from">Platform</Label>
-        <Select onValueChange={setPlatform} value={platform}>
-          <SelectTrigger className="w-full mt-2">
-            <SelectValue placeholder="Select a Platform" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="html5">Html5</SelectItem>
-            <SelectItem value="mobile">Mobile</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-      <div>
-        <Button
-          type="button"
-          onClick={fetchData}
-          disabled={isHandling}
-          hidden={data.length > 0}
-        >
-          {isHandling && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}Fetch
-        </Button>
-        <Button
-          type="button"
-          onClick={importData}
-          disabled={isHandling}
-          hidden={data.length === 0}
-        >
-          {isHandling && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-          Import {data.length} items
-        </Button>
-      </div>
-      {data && data.length > 0 && (
-        <div className="w-full md:w-[800px] flex flex-col gap-4">
+      </HeaderContainer>
+      <div className="flex flex-col gap-4">
+        {isImporting && (
           <div className="flex items-center justify-between gap-2">
             <Progress value={progress} />
           </div>
-          <div className="w-full p-4 border border-slate-500/20 rounded-md">
-            <GameList
-              data={items}
-              currentPage={currentPage}
-              hasMore={hasMore}
-              isLoading={isLoading}
-              onLoadMore={onLoadMore}
-            />
-          </div>
+        )}
+        <div className="w-full p-4 border border-slate-500/20 rounded-md">
+          <GameList
+            data={items}
+            currentPage={currentPage}
+            hasMore={hasMore}
+            isLoading={isLoading}
+            onLoadMore={onLoadMore}
+          />
         </div>
-      )}
-    </div>
+      </div>
+    </Main>
   );
 };
 

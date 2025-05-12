@@ -1,13 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import UploadFile from "./_components/upload-file";
+import UploadFile from "../../../(dashboard)/new-admin/_components/upload-file";
 import { useEffect, useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import GameList from "./_components/game-list";
 import toast from "react-hot-toast";
 import { GameDistributionResult } from "@/models/game";
 import axios from "axios";
+import GameList from "@/app/(dashboard)/new-admin/_components/game-list";
 
 const GameImport = () => {
   const [data, setData] = useState<any[]>([]);

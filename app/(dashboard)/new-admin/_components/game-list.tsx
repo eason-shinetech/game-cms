@@ -37,7 +37,7 @@ const GameList = ({
   }, [currentPage, hasMore, isLoading, onLoadMore]);
 
   return (
-    <div className="space-y-4 h-[600px] overflow-y-auto">
+    <div className="space-y-4 min-h-[400px] overflow-y-auto">
       {data.map((item, index) => (
         <GameItem key={index} {...item} />
       ))}
