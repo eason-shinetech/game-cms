@@ -1,25 +1,25 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
-import { NextResponse } from 'next/server'
+import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
-  
-  // console.log('Request URL:', nextUrl);
+
   // 加强路径匹配规则
-  if (nextUrl.pathname.startsWith('/cdn-cgi')) {
+  if (nextUrl.pathname.startsWith("/cdn-cgi")) {
+    console.log("Skipping middleware for /cdn-cgi path");
     // 创建空响应避免 404
-    return new Response(null, { 
+    return new Response(null, {
       status: 204,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'CF-RAY': 'mock_bypass'
-      }
+        "Access-Control-Allow-Origin": "*",
+        "CF-RAY": "mock_bypass",
+      },
     });
   }
-  
+
   const response = NextResponse.next();
 
   // set isAuthenticated to true if req.auth is a truthy value. otherwise set to false.
