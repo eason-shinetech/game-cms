@@ -30,7 +30,9 @@ export async function GET(req: NextRequest) {
     if (searchSelectedBanner) {
       const config = await GameConfigModel.findOne();
       if (config) {
-        const bannerIds = config.banners.map((banner: { id: any; }) => banner.id);
+        const bannerIds = config.banners.map(
+          (banner: { id: any }) => banner.id
+        );
         conds.push({ _id: { $in: bannerIds } });
       }
     }
@@ -38,7 +40,8 @@ export async function GET(req: NextRequest) {
       conds.push({ status: status });
     }
     if (categoryName) {
-      conds.push({ categories: categoryName });
+      const searchName = categoryName.split(",");
+      conds.push({ categories: { $in: searchName } });
     }
     if (keyword) {
       conds.push(dbquery);
