@@ -32,6 +32,7 @@ export default auth((req) => {
   return NextResponse.next();
 });
 
+
 export const config = {
   matcher: [
     // 允许所有路由通过中间件，但排除静态资源
