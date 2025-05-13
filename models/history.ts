@@ -19,6 +19,12 @@ export interface IHistory extends Document {
   updatedAt: Date;
 }
 
+export interface UserStatisticsResult {
+  userIds: { _id: string; date: string }[];
+  totalLogins: { _id: string; count: number }[];
+  totalGames: { _id: string; count: number }[];
+}
+
 const HistorySchema = new mongoose.Schema<IHistory>(
   {
     gameId: mongoose.Types.ObjectId,

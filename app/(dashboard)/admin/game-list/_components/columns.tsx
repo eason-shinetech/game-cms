@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { GameList } from "@/data/game-schema";
-import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableColumnHeader } from "../../../../../components/commons/data-table-column-header";
 import { CircleCheckIcon, FlagIcon, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {

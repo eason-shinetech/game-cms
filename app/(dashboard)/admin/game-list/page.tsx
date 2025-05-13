@@ -1,7 +1,7 @@
 "use client";
 import { ColumnSort } from "@tanstack/react-table";
 import { getColumns } from "./_components/columns";
-import { DataTable } from "./_components/data-table";
+import { DataTable } from "../../../../components/commons/data-table";
 import { SearchInput } from "@/components/commons/search-input";
 import { Button } from "@/components/ui/button";
 import React, { use, useEffect, useMemo, useState } from "react";
@@ -15,7 +15,7 @@ import {
   SquareMousePointerIcon,
   XIcon,
 } from "lucide-react";
-import { DataTablePagination } from "./_components/data-table-pagination";
+import { DataTablePagination } from "../../../../components/commons/data-table-pagination";
 import { useLoadingStore } from "@/store/loading-store";
 import {
   Select,
@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { GameList } from "@/data/game-schema";
 import { HeaderContainer } from "../_components/header-container";
-import { DataTableFacetedFilter } from "./_components/data-table-faceted-filter";
+import { DataTableFacetedFilter } from "../../../../components/commons/data-table-faceted-filter";
 import { CategoryMapping } from "@/models/game-category";
 import { cn } from "@/lib/utils";
 import { Main } from "../_components/main";
