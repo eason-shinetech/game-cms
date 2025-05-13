@@ -5,22 +5,22 @@ const Popularity = () => {
     {
       name: "Newest Games",
       value: "newest",
-      img:'/bg1.png'
+      img:'/bg1.webp'
     },
     {
       name: "Popular Games",
       value: "mostplayed",
-      img:'/bg2.png'
+      img:'/bg2.webp'
     },
     {
       name: "Hot Games",
       value: "hotgames",
-      img:'/bg3.png'
+      img:'/bg3.webp'
     },
     {
       name: "Best Games",
       value: "bestgames",
-      img:'/bg4.png'
+      img:'/bg4.webp'
     },
   ];
   return (
