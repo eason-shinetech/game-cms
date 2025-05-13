@@ -20,26 +20,6 @@ export default auth((req) => {
   return NextResponse.next();
 });
 
-export function middleware(req: NextRequest) {
-  const url = req.nextUrl;
-
-  console.log("Skipping middleware for /cdn-cgi path", url.pathname);
-  // 加强路径匹配规则
-  if (url.pathname === "/cdn-cgi/rum") {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        "CF-RAY": req.headers.get("CF-RAY") || "fallback_ray",
-        // 修复 IP 获取方式：从 X-Forwarded-For 头获取
-        "CF-Connecting-IP": req.headers.get("X-Forwarded-For") || "",
-        "Access-Control-Allow-Headers": "Content-Type, CF-RAY",
-      },
-    });
-  }
-
-  return NextResponse.next();
-}
-
 export const config = {
   matcher: [
     // 允许所有路由通过中间件，但排除静态资源
