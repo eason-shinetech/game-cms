@@ -26,6 +26,8 @@ const BannerItem = ({ id, titleUrl, bannerImage }: BannerItemProps) => {
         width={512}
         height={384}
         className="h-full w-full rounded-md object-contain shadow-sm"
+        priority={true}
+        sizes="(max-width: 768px) 100vw, 512px"
       />
     </AspectRatio>
   );
