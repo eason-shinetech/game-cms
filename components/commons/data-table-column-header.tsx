@@ -26,7 +26,6 @@ export function DataTableColumnHeader<TData, TValue>({
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>
   }
-
   return (
     <div className={cn('flex items-center space-x-2', className)}>
       <DropdownMenu>
@@ -54,6 +53,10 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
             <ArrowDownIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
             Desc
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => column.clearSorting()}>
+            <ChevronsUpDownIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
+            Clear
           </DropdownMenuItem>
           {column.getCanHide() && (
             <>

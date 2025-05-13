@@ -5,6 +5,7 @@ import {
   ColumnSort,
   flexRender,
   getCoreRowModel,
+  getSortedRowModel,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -33,45 +34,45 @@ export function DataTable<TData, TValue>({
   onRowSelectionChange, // 新增props
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [rowSelection, setRowSelection] = React.useState({});
 
   useEffect(() => {
     table.resetRowSelection();
   }, [data]);
-  
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onRowSelectionChange: (updater) => {
-      const newSelection = typeof updater === "function" 
-        ? updater(rowSelection)
-        : updater;
+      const newSelection =
+        typeof updater === "function" ? updater(rowSelection) : updater;
       setRowSelection(newSelection);
-      
+
       // 触发外部回调，传递选中行的_id
       if (onRowSelectionChange) {
         const selectedIds = Object.keys(newSelection)
-          .filter(key => newSelection[key])
-          .map(key => (table.getRow(key).original as any)?._id); // 假设数据行有_id字段
+          .filter((key) => newSelection[key])
+          .map((key) => (table.getRow(key).original as any)?._id); // 假设数据行有_id字段
         onRowSelectionChange(selectedIds.filter(Boolean) as string[]);
       }
     },
+    getSortedRowModel: getSortedRowModel(),
     onSortingChange: (updater) => {
       // 正确处理 Updater 类型（可能为函数或值）
-      const newSorting =
-        typeof updater === "function" ? updater(sorting) : updater;
-
-      setSorting(newSorting);
       if (sortChanged) {
+        const newSorting =
+          typeof updater === "function" ? updater(sorting) : updater;
+
+        setSorting(newSorting);
         const [currentSort] = newSorting;
-        if (currentSort) {
-          sortChanged(currentSort);
-        }
+        sortChanged(currentSort);
+      } else {
+        setSorting(updater);
       }
     },
     enableMultiSort: false,
-    manualSorting: true,
+    manualSorting: !!sortChanged,
     state: {
       sorting,
       rowSelection,

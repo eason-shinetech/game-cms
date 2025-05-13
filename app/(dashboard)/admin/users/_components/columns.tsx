@@ -1,11 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { GameUserList } from "@/data/game-user-schema";
 import { DataTableColumnHeader } from "../../../../../components/commons/data-table-column-header";
-import { CircleCheckIcon, FlagIcon, MoreHorizontal } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

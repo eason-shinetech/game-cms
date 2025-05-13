@@ -175,6 +175,7 @@ const ListPage = () => {
   }, [isLoading, isPublishAll]);
 
   const sortChanged = (sorting: ColumnSort) => {
+    console.log("sorting:", sorting);
     setSort(sorting);
   };
 
