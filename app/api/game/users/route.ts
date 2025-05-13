@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/db";
 import { NextResponse } from "next/server";
 import HistoryModel, { UserStatisticsResult } from "@/models/history";
-import { UserList } from "@/data/user-schema";
+import { GameUserList } from "@/data/game-user-schema";
 
 export async function GET(req: Request) {
   try {
@@ -37,7 +37,7 @@ export async function GET(req: Request) {
     ];
 
     const result = await HistoryModel.aggregate<UserStatisticsResult>(aggr);
-    const data: UserList[] = [];
+    const data: GameUserList[] = [];
     if (result.length) {
       const { userIds, totalLogins, totalGames } = result[0];
       for (let i = 0; i < userIds.length; i++) {

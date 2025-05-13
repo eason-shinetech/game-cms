@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { UserList } from "@/data/user-schema";
+import { GameUserList } from "@/data/game-user-schema";
 import { DataTableColumnHeader } from "../../../../../components/commons/data-table-column-header";
 import { CircleCheckIcon, FlagIcon, MoreHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-export const getColumns = (onRefresh: () => void): ColumnDef<UserList>[] => [
+export const getColumns = (onRefresh: () => void): ColumnDef<GameUserList>[] => [
   {
     accessorKey: "userId",
     header: ({ column }) => (
@@ -96,7 +96,7 @@ export const getColumns = (onRefresh: () => void): ColumnDef<UserList>[] => [
   },
 ];
 
-const Remove = async (user: UserList) => {
+const Remove = async (user: GameUserList) => {
   try {
     await axios.delete(`/api/game/users/${user.userId}`);
     toast.success(`Remove successfully!`);

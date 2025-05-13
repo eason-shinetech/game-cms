@@ -6,10 +6,10 @@ import { Main } from "../_components/main";
 import axios from "axios";
 import { DataTable } from "@/components/commons/data-table";
 import { getColumns } from "./_components/columns";
-import { UserList } from "@/data/user-schema";
+import { GameUserList } from "@/data/game-user-schema";
 
 const UsersPage = () => {
-  const [data, setData] = useState<UserList[]>([]);
+  const [data, setData] = useState<GameUserList[]>([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const columns = useMemo(
     () => getColumns(() => setRefreshKey((k) => k + 1)),
@@ -19,7 +19,7 @@ const UsersPage = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get("/api/game/users");
-      const data = response.data as UserList[];
+      const data = response.data as GameUserList[];
       setData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
