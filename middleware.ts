@@ -1,26 +1,11 @@
 import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
-
-  // 加强路径匹配规则
-  if (nextUrl.pathname.startsWith("/cdn-cgi")) {
-    console.log("Skipping middleware for /cdn-cgi path");
-    // 创建空响应避免 404
-    return new Response(null, {
-      status: 204,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "CF-RAY": "mock_bypass",
-      },
-    });
-  }
-
-  const response = NextResponse.next();
 
   // set isAuthenticated to true if req.auth is a truthy value. otherwise set to false.
   const isAuthenticated = !!req.auth;
@@ -32,8 +17,28 @@ export default auth((req) => {
   if (isProtectedRoute && !isAuthenticated)
     return Response.redirect(new URL("/login", process.env.NEXTAUTH_URL));
 
-  return response;
+  return NextResponse.next();
 });
+
+export function middleware(req: NextRequest) {
+  const url = req.nextUrl;
+
+  console.log("Skipping middleware for /cdn-cgi path", url.pathname);
+  // 加强路径匹配规则
+  if (url.pathname === "/cdn-cgi/rum") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "CF-RAY": req.headers.get("CF-RAY") || "fallback_ray",
+        // 修复 IP 获取方式：从 X-Forwarded-For 头获取
+        "CF-Connecting-IP": req.headers.get("X-Forwarded-For") || "",
+        "Access-Control-Allow-Headers": "Content-Type, CF-RAY",
+      },
+    });
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [
