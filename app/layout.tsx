@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     "html5",
     "mobile",
   ],
-  metadataBase: new URL("https://freegame.funnyplayers.com"),
+  metadataBase: new URL("https://funnyplayers.com"),
   alternates: {
     canonical: "/",
   },
