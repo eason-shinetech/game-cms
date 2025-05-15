@@ -34,10 +34,12 @@ export async function saveGameMonetizeGames(games: GameMonetizeResult[]) {
     const addGames: Omit<Game, PropsCURDOmitted>[] = games
       .filter((g) => !!g.title && !!g.width && !!g.height)
       .map((game) => {
-        const categoryMapping = CategoryMapping.find((m) =>
-          m.categories.includes(game.category)
-        );
-        const categoryName = categoryMapping?.name || "Others";
+        const categoryMapping = game.category?.split(",")?.map((item) => {
+          const mapping = CategoryMapping.find((m) =>
+            m.categories.includes(item)
+          );
+          return mapping?.name || "Others";
+        });
         const tags =
           game.tags
             ?.split(",")
@@ -59,7 +61,7 @@ export async function saveGameMonetizeGames(games: GameMonetizeResult[]) {
           bannerImage: game.thumb.trim(),
           width: game.width,
           height: game.height,
-          categories: [categoryName],
+          categories: categoryMapping,
           tags: tags,
           lastUpdated: new Date(),
           fetchFrom: game.from || "monetize",
