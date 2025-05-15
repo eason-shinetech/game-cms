@@ -11,6 +11,7 @@ import { Game } from "@/models/game";
 import {
   CheckCircle2Icon,
   Loader2,
+  PencilIcon,
   SearchIcon,
   SquareMousePointerIcon,
   XIcon,
@@ -37,6 +38,7 @@ import { DataTableFacetedFilter } from "../../../../components/commons/data-tabl
 import { CategoryMapping } from "@/models/game-category";
 import { cn } from "@/lib/utils";
 import { Main } from "../_components/main";
+import SetPopularityDialog from "./_components/set-popularity-dialog";
 
 const ListPage = () => {
   const [data, setData] = React.useState<GameList[]>([]);
@@ -353,28 +355,38 @@ const ListPage = () => {
         </Button>
 
         {selectedIds?.length > 0 && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button>Actions</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={publishSelected}>
-                Publish
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={unpublishSelected}>
-                Unpublish
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={addBannerSelected}>
-                Set Banner
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={removeBannerSelected}>
-                Remove Banner
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={addClickSelected}>
-                Add Clicks
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  <PencilIcon /> Actions
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={publishSelected}>
+                  Publish
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={unpublishSelected}>
+                  Unpublish
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={addBannerSelected}>
+                  Set Banner
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={removeBannerSelected}>
+                  Remove Banner
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={addClickSelected}>
+                  Add Clicks
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <SetPopularityDialog
+              selectIds={selectedIds}
+              onClose={() => {
+                setRefreshKey((k) => k + 1);
+              }}
+            />
+          </>
         )}
       </div>
       <DataTable

@@ -10,6 +10,7 @@ interface FetchHeaderProps {
   isImportDisabled: boolean;
   isImporting: boolean;
   onImport: () => void;
+  length: number;
 }
 
 const GameFetchHeader = ({
@@ -18,13 +19,17 @@ const GameFetchHeader = ({
   isImportDisabled,
   isImporting,
   onImport,
+  length,
 }: FetchHeaderProps) => {
   return (
     <>
       <div>
-        <h2 className="text-2xl font-bold tracking-tight">Fetch From GameMonetize</h2>
+        <h2 className="text-2xl font-bold tracking-tight">
+          Fetch From GameMonetize
+        </h2>
         <p className="text-muted-foreground">
-          Fetch games from GameMonetize here. Click 'Start Fetch' when you're done.
+          Fetch games from GameMonetize here. Click 'Start Fetch' when you're
+          done.
         </p>
       </div>
       <div className="flex gap-2">
@@ -39,7 +44,7 @@ const GameFetchHeader = ({
           ) : (
             <ImportIcon size={18} />
           )}
-          <span>Import</span>
+          <span>Import {length}</span>
         </Button>
       </div>
     </>

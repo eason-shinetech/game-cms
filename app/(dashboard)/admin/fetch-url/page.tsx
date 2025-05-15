@@ -75,7 +75,7 @@ const FetchUrlPage = () => {
       if (fetchData.length === 0) {
         setIsFetching(false);
         if (fetchTimer.current) {
-          console.log('clearTimeout fetchTimer')
+          console.log("clearTimeout fetchTimer");
           clearTimeout(fetchTimer.current);
           fetchTimer.current = null;
         }
@@ -88,11 +88,13 @@ const FetchUrlPage = () => {
       let currentGames = fetchData;
       if (from === "gamepix") {
         const items = fetchData.items;
-        currentGames = convertData(items);
+        currentGames = convertGamepixData(items);
+      } else if (from === "gamedistribution") {
+        const items = fetchData.items;
+        currentGames = convertDistributionData(items);
       }
       games.push(...currentGames);
-      if(!fetchTimer.current){
-        
+      if (!fetchTimer.current) {
       }
       fetchTimer.current = setTimeout(async () => {
         await fetchFromUrl(page + 1, games, time);
@@ -131,7 +133,8 @@ const FetchUrlPage = () => {
     getPageData(page);
   };
 
-  const convertData = (data: any[]) => {
+  //#region Gamepix
+  const convertGamepixData = (data: any[]) => {
     if (data.length === 0 || from === "monetize") return data;
     const newData = data.map((item: any) => {
       const image = item?.image;
@@ -181,6 +184,39 @@ const FetchUrlPage = () => {
       item.categories.some((c) => c.toLowerCase() === category.toLowerCase())
     );
     return current?.name || "Hypercasual";
+  };
+  //#endregion
+
+  const convertDistributionData = (data: any[]) => {
+    if (data.length === 0 || from === "monetize") return data;
+    const newData = data.map((item: any) => {
+      const image = (item?.Asset as string[])?.find(
+        (a) => a.indexOf("512x384") > -1
+      );
+      if (!image) {
+        console.error(
+          "convertDistributionData: no image",
+          item?.Title,
+          item?.Asset
+        );
+      }
+      return {
+        title: item?.Title,
+        description: item?.Description,
+        instructions: item?.Instructions,
+        url: item?.Url,
+        thumb: image,
+        bannerImage: image,
+        width: item?.Width,
+        height: item?.Height,
+        category: item?.Category?.join(","),
+        tags: item?.Tag?.join(","),
+        platform: platform,
+        popularity: "",
+        from: from,
+      };
+    });
+    return newData;
   };
 
   const getPageData = (page: number) => {

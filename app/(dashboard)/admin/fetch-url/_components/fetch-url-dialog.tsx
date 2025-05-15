@@ -74,6 +74,8 @@ const FetchUrlDialog = ({ isFetching, onFetch }: FetchUrlDialogProps) => {
                 setFrom("gamepix");
               } else if (url.indexOf("gamemonetize") > -1) {
                 setFrom("monetize");
+              } else if (url.indexOf("gamedistribution") > -1) {
+                setFrom("gamedistribution");
               }
             }}
           />
