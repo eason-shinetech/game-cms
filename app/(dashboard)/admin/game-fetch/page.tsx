@@ -129,6 +129,7 @@ const GameFetchPage = () => {
           isImportDisabled={data.length === 0 || isImporting}
           isImporting={isImporting}
           onImport={handleImportGames}
+          length={data.length}
         />
       </HeaderContainer>
       <div className="flex flex-col gap-4">
