@@ -10,6 +10,7 @@ interface FetchUrlHeaderProps {
   isImportDisabled: boolean;
   isImporting: boolean;
   onImport: () => void;
+  length: number;
 }
 
 const FetchUrlHeader = ({
@@ -18,6 +19,7 @@ const FetchUrlHeader = ({
   isImportDisabled,
   isImporting,
   onImport,
+  length,
 }: FetchUrlHeaderProps) => {
   return (
     <>
@@ -39,7 +41,7 @@ const FetchUrlHeader = ({
           ) : (
             <ImportIcon size={18} />
           )}
-          <span>Import</span>
+          <span>Import {length}</span>
         </Button>
       </div>
     </>

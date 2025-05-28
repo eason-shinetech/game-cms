@@ -28,13 +28,34 @@ interface FetchUrlDialogProps {
 }
 
 const FetchUrlDialog = ({ isFetching, onFetch }: FetchUrlDialogProps) => {
-  const [from, setFrom] = useState("monetize");
+  const [from, setFrom] = useState("");
   const [platform, setPlatform] = useState("mobile");
-  const [url, setUrl] = useState("https://gamemonetize.com/feed.php?format=0");
+  const [url, setUrl] = useState("");
+
+  const gameUrls = [
+    {
+      from: "monetize",
+      url: "https://gamemonetize.com/feed.php?format=0",
+    },
+    {
+      from: "gamepix",
+      url: "https://feeds.gamepix.com/v2/json?sid=45F4Y&pagination=96",
+    },
+    {
+      from: "gamedistribution",
+      url: "https://gd-website-api.gamedistribution.com/graphql",
+    },
+  ];
 
   const startFetch = () => {
     console.log("start fetch", url, from, platform);
     onFetch(url, from, platform);
+  };
+
+  const onFromChange = (value: string) => {
+    setFrom(value);
+    const currentUrl = gameUrls.find((item) => item.from === value)?.url;
+    setUrl(currentUrl || "");
   };
   return (
     <Dialog>
@@ -56,41 +77,30 @@ const FetchUrlDialog = ({ isFetching, onFetch }: FetchUrlDialogProps) => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid w-full max-w-sm items-center gap-2">
+          <div className="grid w-full max-w-sm items-center gap-2">
+          <Label htmlFor="from">From</Label>
+          <Select onValueChange={onFromChange} value={from}>
+            <SelectTrigger className="w-full mt-2">
+              <SelectValue placeholder="Select a From" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="monetize">Game Monetize</SelectItem>
+              <SelectItem value="gamepix">gamepix</SelectItem>
+              <SelectItem value="gamedistribution">Game Distribution</SelectItem>
+            </SelectContent>
+          </Select>
+          
+        </div>
           <Label htmlFor="url">Url</Label>
-          {/* <span className="text-xs text-slate-400">
-            https://gamemonetize.com/feed.php?format=0
-            <br />
-            https://feeds.gamepix.com/v2/json?sid=45F4Y&pagination=96
-          </span> */}
           <Input
             type="url"
             id="url"
             placeholder="Enter a url"
             value={url}
-            onChange={(e: any) => {
-              const url = e.target.value;
-              setUrl(url);
-              if (url.indexOf("gamepix") > -1) {
-                setFrom("gamepix");
-              } else if (url.indexOf("gamemonetize") > -1) {
-                setFrom("monetize");
-              } else if (url.indexOf("gamedistribution") > -1) {
-                setFrom("gamedistribution");
-              }
-            }}
-          />
-        </div>
-        <div className="grid w-full max-w-sm items-center gap-2">
-          <Label htmlFor="from">From</Label>
-          <span className="text-xs text-slate-400">monetize / gamepix</span>
-          <Input
-            type="from"
-            id="from"
-            value={from}
-            placeholder="monetize"
             disabled
           />
         </div>
+        
         <div className="grid w-full max-w-sm items-center gap-2">
           <Label htmlFor="from">Platform</Label>
           <Select onValueChange={setPlatform} value={platform}>
@@ -104,7 +114,7 @@ const FetchUrlDialog = ({ isFetching, onFetch }: FetchUrlDialogProps) => {
           </Select>
         </div>
         <DialogFooter>
-          <Button onClick={startFetch} disabled={isFetching}>
+          <Button onClick={startFetch} disabled={isFetching || !url ||  !from}>
             {isFetching && <Loader2Icon size={18} className="animate-spin" />}
             {isFetching ? `Fetching Data` : `Start Fetch`}
           </Button>

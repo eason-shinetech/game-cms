@@ -52,7 +52,11 @@ const FetchUrlPage = () => {
     }
     try {
       setData([]);
-      await fetchFromUrl(1, [], from === "gamepix" ? 1000 : 13000);
+      await fetchFromUrl(
+        1,
+        [],
+        ["gamepix", "gamedistribution"].includes(from) ? 1000 : 13000
+      );
     } catch (error) {
       console.error(error);
       toast.error("Fetch data failed");
@@ -62,16 +66,46 @@ const FetchUrlPage = () => {
   const fetchFromUrl = async (page: number, games: any[], time: number) => {
     try {
       setIsFetching(true);
-      const fetchUrl = `${url}&page=${page}`;
-      const res = await axios.get(fetchUrl);
-      const fetchData = res.data;
-      console.log(
-        "fetchFromUrl:",
-        time,
-        fetchUrl,
-        fetchData.length,
-        games.length
-      );
+      let res, fetchData;
+      if (from === "gamedistribution") {
+        const params = {
+          operationName: "GetGamesSearched",
+          query:
+            'fragment CoreGame on SearchHit {\n  objectID\n  title\n description\n  instruction\n width\n height\n mobile\n categories\n tags\n mobileMode\n company\n  visible\n  exclusiveGame\n assets {\n    name\n    __typename\n  }\n  lastPublishedAt\n  sortScore\n  __typename\n}\n\nquery GetGamesSearched($id: String! = "", $perPage: Int! = 0, $page: Int! = 0, $search: String! = "", $UIfilter: UIFilterInput! = {}, $filters: GameSearchFiltersFlat! = {}, $sortBy: KnownOrder, $sortByGeneric: [String!], $sortByCountryPerf: SortByCountryPerf! = {}, $sortByGenericWithDirection: [SortByGenericWithDirection!], $sortByScore: SortByScore) {\n  gamesSearched(\n    input: {collectionObjectId: $id, hitsPerPage: $perPage, page: $page, search: $search, UIfilter: $UIfilter, filters: $filters, sortBy: $sortBy, sortByCountryPerf: $sortByCountryPerf, sortByGeneric: $sortByGeneric, sortByGenericWithDirection: $sortByGenericWithDirection, sortByScore: $sortByScore}\n  ) {\n    hitsPerPage\n    nbHits\n    nbPages\n    page\n    hits {\n      ...CoreGame\n   __typename\n    }\n    filters {\n      title\n      key\n      type\n      values\n      __typename\n    }\n    __typename\n  }\n}',
+          variables: {
+            UIfilter: {
+              mobile_ready: [],
+            },
+            filters: {},
+            id: "",
+            page: page - 1,
+            perPage: 400,
+            search: "",
+            sortByGenericWithDirection: [
+              {
+                field: "publishedAt",
+                direction: "DESC",
+              },
+            ],
+          },
+        };
+        res = await axios.post(url, params);
+        fetchData = res.data.data?.gamesSearched?.hits || [];
+      } else {
+        const fetchUrl = `${url}&page=${page}`;
+        res = await axios.get(fetchUrl);
+        fetchData = res.data;
+      }
+      if (!res) {
+        toast.error("Fetch data failed");
+        setIsFetching(false);
+        if (fetchTimer.current) {
+          clearTimeout(fetchTimer.current);
+          fetchTimer.current = null;
+        }
+        return;
+      }
+      console.log("fetchFromUrl:", time, fetchData.length, games.length);
       if (fetchData.length === 0) {
         setIsFetching(false);
         if (fetchTimer.current) {
@@ -90,8 +124,7 @@ const FetchUrlPage = () => {
         const items = fetchData.items;
         currentGames = convertGamepixData(items);
       } else if (from === "gamedistribution") {
-        const items = fetchData.items;
-        currentGames = convertDistributionData(items);
+        currentGames = convertDistributionData(fetchData);
       }
       games.push(...currentGames);
       if (!fetchTimer.current) {
@@ -190,28 +223,33 @@ const FetchUrlPage = () => {
   const convertDistributionData = (data: any[]) => {
     if (data.length === 0 || from === "monetize") return data;
     const newData = data.map((item: any) => {
-      const image = (item?.Asset as string[])?.find(
-        (a) => a.indexOf("512x384") > -1
-      );
+      const image = (item?.assets as any[])?.find(
+        (a) => a.name.indexOf("512x384") > -1
+      )?.name;
       if (!image) {
-        console.error(
+        console.log(
           "convertDistributionData: no image",
-          item?.Title,
-          item?.Asset
+          item?.title,
+          item?.assets
         );
       }
       return {
-        title: item?.Title,
-        description: item?.Description,
-        instructions: item?.Instructions,
-        url: item?.Url,
-        thumb: image,
-        bannerImage: image,
-        width: item?.Width,
-        height: item?.Height,
-        category: item?.Category?.join(","),
-        tags: item?.Tag?.join(","),
-        platform: platform,
+        id: item?.objectID,
+        title: item?.title,
+        description: item?.description,
+        instructions: item?.instructions,
+        url: `https://html5.gamedistribution.com/${item?.objectID}`,
+        thumb: `https://img.gamedistribution.com/${image}`,
+        bannerImage: `https://img.gamedistribution.com/${image}`,
+        width: item?.width,
+        height: item?.height,
+        category: item?.categories?.join(","),
+        tags: item?.tags?.join(","),
+        platform:
+          item?.mobile?.includes("ForIOS") ||
+          item?.mobile?.includes("ForAndroid")
+            ? "mobile"
+            : "html5",
         popularity: "",
         from: from,
       };
@@ -301,6 +339,11 @@ const FetchUrlPage = () => {
     }
   };
 
+  useEffect(() => {
+    if (!url || !from) return;
+    fetchData();
+  }, [from, url]);
+
   return (
     <Main fixed>
       <HeaderContainer>
@@ -310,11 +353,11 @@ const FetchUrlPage = () => {
             setUrl(url);
             setFrom(from);
             setPlatform(platform);
-            fetchData();
           }}
           isImportDisabled={data.length === 0 || isImporting}
           isImporting={isImporting}
           onImport={importData}
+          length={data.length}
         />
       </HeaderContainer>
       <div className="flex flex-col gap-4">
